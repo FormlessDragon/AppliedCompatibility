@@ -6,7 +6,11 @@ on:
       - "v*"
 
 jobs:
+  runtime-test:
+    uses: ./.github/workflows/runtime-test.yml
+
   build:
+    needs: runtime-test
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -22,6 +26,8 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
       - uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: 9.6.0
         name: Set up Gradle
       - name: Add permission
         run: chmod +x ./gradlew
@@ -32,7 +38,7 @@ jobs:
           echo "Release tag: ${RELEASE_TAG}"
           echo "Release version: ${RELEASE_VERSION}"
       - name: Execute Gradle build
-        run: ./gradlew build -Pmod_version="${RELEASE_VERSION}"
+        run: ./gradlew build -x spotlessCheck -Pmod_version="${RELEASE_VERSION}"
       - name: Build JitPack Maven repository
         run: |
           JITPACK_GROUP="com.github.${GITHUB_REPOSITORY_OWNER}"
@@ -45,7 +51,7 @@ jobs:
             -Pmod_version="${RELEASE_VERSION}" \
             -Pgenerate_sources_jar=true \
             -Pgenerate_javadocs_jar=true \
-            clean publishMavenJavaPublicationToJitpackRepository -x test
+            clean publishMavenJavaPublicationToJitpackRepository -x test -x spotlessCheck
       - name: Package JitPack Maven repository
         run: |
           cd build/jitpack-repository

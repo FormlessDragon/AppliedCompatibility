@@ -57,7 +57,7 @@ public class ItemDefinition implements IItemDefinition {
         if (this.definition != null) {
             return Optional.ofNullable(this.definition.stack(stackSize));
         }
-        return this.item == null ? Optional.of(new ItemStack(item, stackSize)) : Optional.empty();
+        return this.item != null ? Optional.of(new ItemStack(item, stackSize)) : Optional.empty();
     }
 
     @Override

@@ -9,6 +9,10 @@
     "minVersion": "0.5.3"
   },
   "mixins": [
+    "enderioae.MixinEnderIO",
+    "enderioae.MixinMEConduit",
+    "enderioae.MixinMEConduitGrid",
+    "enderioae.MixinTileConduitBundle",
     "gtceu.MixinMetaTileEntityHolder",
     "gtceu.MixinMods",
     "mmce.MixinCommonProxy",

@@ -7,4 +7,6 @@ public interface IDefinitions {
     IMaterials materials();
 
     IBlocks blocks();
+
+    IParts parts();
 }

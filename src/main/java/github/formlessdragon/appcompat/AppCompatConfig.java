@@ -12,4 +12,6 @@ public final class AppCompatConfig {
     public static boolean enablePackagedAuto = true;
 
     public static boolean enablePackagingProvider = true;
+
+    public static boolean enableEnderIOAppliedEnergistics = true;
 }

@@ -22,13 +22,14 @@ jobs:
         distribution: 'temurin'
     - uses: gradle/actions/setup-gradle@v6
       with:
-        gradle-version: 9.4.1
+        gradle-version: 9.6.0
       name: Set up Gradle
     - name: Add permission
       run: chmod +x ./gradlew
     - name: Set build version
       run: |
         previous_tag="$(git describe --tags --abbrev=0 --exclude=dev 2>/dev/null || echo 0.0.0)"
+        previous_tag="${previous_tag#v}"
         short_hash="$(git rev-parse --short HEAD)"
         echo "MOD_VERSION=${previous_tag}+${short_hash}" >> "$GITHUB_ENV"
         echo "Build version: ${previous_tag}+${short_hash}"

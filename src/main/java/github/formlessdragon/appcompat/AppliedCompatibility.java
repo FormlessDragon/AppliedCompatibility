@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = "appliedenergistics2", name = Tags.MOD_NAME, version = Tags.VERSION, acceptedMinecraftVersions = "[1.12.2]",
-    dependencies = "required-after:ae2@[1.0.5,);after:mekeng;"
+    dependencies = "required-after:ae2@[1.0.9,);after:mekeng;"
 )
 public class AppliedCompatibility {
 
