@@ -1,4 +1,4 @@
-package appeng.api;
+package appeng.core.api;
 
 import appeng.api.networking.IGridBlock;
 import appeng.api.networking.IGridHelper;
@@ -6,15 +6,19 @@ import appeng.api.networking.IGridNode;
 import github.formlessdragon.appcompat.bridge.packagedauto.PackagedAutoLegacyGridNode;
 import github.formlessdragon.appcompat.bridge.packagedauto.PackagedAutoNodeAccess;
 
-public final class AppCompatGridHelper implements IGridHelper {
+public class ApiGrid implements IGridHelper {
 
     @Override
     public IGridNode createGridNode(final IGridBlock gridBlock) {
-        if (gridBlock.getMachine() instanceof PackagedAutoNodeAccess access) {
+        if (gridBlock == null) {
+            throw new IllegalArgumentException("Legacy AE grid block is required");
+        }
+        final Object machine = gridBlock.getMachine();
+        if (machine instanceof PackagedAutoNodeAccess access) {
             final IGridNode node = new PackagedAutoLegacyGridNode(gridBlock, access);
             access.appcompat$setLegacyNode(node);
             return node;
         }
-        throw new IllegalStateException("Legacy AE grid node creation is not registered for " + gridBlock.getMachine().getClass().getName());
+        throw new IllegalStateException("Legacy AE grid node creation is not registered for " + machine.getClass().getName());
     }
 }

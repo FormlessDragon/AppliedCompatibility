@@ -74,6 +74,11 @@ public final class PackagedAutoMEMonitorAdapter<T extends IAEStack<T>> implement
         return list;
     }
 
+    @Override
+    public IStorageChannel<T> getChannel() {
+        return this.channel;
+    }
+
     private void ensureChannel(final AEKey key) {
         if (!PackagedAutoAeKeyBridge.matchesChannel(this.channel, key)) {
             throw new IllegalArgumentException("Stack " + key + " does not belong to old AE channel " + this.channel.getClass().getName());

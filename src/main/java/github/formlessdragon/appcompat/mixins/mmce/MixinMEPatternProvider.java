@@ -79,6 +79,8 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
     protected List<MachineComponent<?>> combinationComponents;
     @Shadow
     private String machineName;
+    @Unique
+    private boolean ac_v;
 
     @Shadow
     public abstract AppEngInternalInventory getPatterns();
@@ -97,6 +99,21 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
 
     @Shadow
     public abstract String getCustomInventoryName();
+
+    @Override
+    public boolean isVisibleInTerminal() {
+        return ac_v;
+    }
+
+    @Override
+    public boolean canModifyTerminalVisibility() {
+        return true;
+    }
+
+    @Override
+    public void setTerminalVisibility(boolean visible) {
+        ac_v = visible;
+    }
 
     @Override
     public List<IPatternDetails> getAvailablePatterns() {

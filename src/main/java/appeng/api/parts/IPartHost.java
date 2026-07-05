@@ -5,9 +5,9 @@ import net.minecraft.util.EnumFacing;
 
 public interface IPartHost {
 
-    Object getPart(AEPartLocation side);
+    IPart getPart(AEPartLocation side);
 
-    default Object getPart(final EnumFacing side) {
+    default IPart getPart(final EnumFacing side) {
         return getPart(AEPartLocation.fromFacing(side));
     }
 }

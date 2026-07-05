@@ -74,6 +74,11 @@ public final class GtceuMEMonitorAdapter<T extends IAEStack<T>> implements IMEMo
         return list;
     }
 
+    @Override
+    public IStorageChannel<T> getChannel() {
+        return this.channel;
+    }
+
     private void ensureChannel(final AEKey key) {
         if (!GtceuAeKeyBridge.matchesChannel(this.channel, key)) {
             throw new IllegalArgumentException("Stack " + key + " does not belong to old AE channel " + this.channel.getClass().getName());

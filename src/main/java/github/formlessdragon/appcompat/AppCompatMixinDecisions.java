@@ -7,6 +7,7 @@ public final class AppCompatMixinDecisions {
     private static boolean enableMMCE = true;
     private static boolean enableGTCEu = true;
     private static boolean enablePackagedAuto = true;
+    private static boolean enablePackagingProvider = true;
     public static final boolean mmceLoaded = Loader.isModLoaded("modularmachinery");
     public static final boolean topLoaded = Loader.isModLoaded("theoneprobe");
     public static final boolean mekengLoaded = Loader.isModLoaded("mekeng");
@@ -22,6 +23,7 @@ public final class AppCompatMixinDecisions {
         enableMMCE = AppCompatConfig.enableMMCE;
         enableGTCEu = AppCompatConfig.enableGTCEu;
         enablePackagedAuto = AppCompatConfig.enablePackagedAuto;
+        enablePackagingProvider = AppCompatConfig.enablePackagingProvider;
     }
 
     public static boolean shouldApply(final String mixinName) {
@@ -36,7 +38,7 @@ public final class AppCompatMixinDecisions {
             case "mmce" -> enableMMCE && mmceLoaded && shouldApplyMMCE(mixinName);
             case "gtceu" -> enableGTCEu && gtceuLoaded;
             case "packagedauto" -> enablePackagedAuto && packagedautoLoaded && shouldApplyPackage(mixinName);
-            case "packagingprovider" -> enablePackagedAuto && packagingproviderLoaded;
+            case "packagingprovider" -> enablePackagingProvider && packagingproviderLoaded;
             default -> true;
         };
     }
