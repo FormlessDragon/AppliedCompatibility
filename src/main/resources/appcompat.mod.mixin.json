@@ -12,6 +12,7 @@
     "enderioae.MixinEnderIO",
     "enderioae.MixinMEConduit",
     "enderioae.MixinMEConduitGrid",
+    "enderioae.MixinThings",
     "enderioae.MixinTileConduitBundle",
     "gtceu.MixinMetaTileEntityHolder",
     "gtceu.MixinMods",

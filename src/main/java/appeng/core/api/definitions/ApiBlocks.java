@@ -7,11 +7,12 @@ import appeng.core.features.BlockDefinition;
 import appeng.core.features.TileDefinition;
 import ae2.core.definitions.AEBlockEntities;
 import ae2.core.definitions.AEBlocks;
+import github.formlessdragon.appcompat.bridge.ae.LegacyAeItemMappings;
 
 public final class ApiBlocks implements IBlocks {
 
-    private final IBlockDefinition quartzOre = BlockDefinition.disabled("quartz_ore");
-    private final IBlockDefinition quartzOreCharged = BlockDefinition.disabled("charged_quartz_ore");
+    private final IBlockDefinition quartzOre = LegacyAeItemMappings.blockDefinition("quartz_ore", "quartz_ore", 0);
+    private final IBlockDefinition quartzOreCharged = LegacyAeItemMappings.blockDefinition("charged_quartz_ore", "charged_quartz_ore", 0);
     private final IBlockDefinition matrixFrame = block("matrix_frame", AEBlocks.MATRIX_FRAME);
     private final IBlockDefinition quartzBlock = block("quartz_block", AEBlocks.QUARTZ_BLOCK);
     private final IBlockDefinition quartzPillar = block("quartz_pillar", AEBlocks.QUARTZ_PILLAR);
@@ -26,7 +27,7 @@ public final class ApiBlocks implements IBlocks {
     private final IBlockDefinition skyStoneSmallBrick = block("sky_stone_small_brick", AEBlocks.SKY_STONE_SMALL_BRICK);
     private final IBlockDefinition skyStoneChest = block("sky_stone_chest", AEBlocks.SKY_STONE_CHEST);
     private final IBlockDefinition smoothSkyStoneChest = block("smooth_sky_stone_chest", AEBlocks.SMOOTH_SKY_STONE_CHEST);
-    private final IBlockDefinition skyCompass = BlockDefinition.disabled("sky_compass");
+    private final IBlockDefinition skyCompass = LegacyAeItemMappings.blockDefinition("sky_compass", "sky_compass", 0);
     private final IBlockDefinition skyStoneStairs = block("sky_stone_stairs", AEBlocks.SKY_STONE_STAIRS);
     private final IBlockDefinition smoothSkyStoneStairs = block("smooth_sky_stone_stairs", AEBlocks.SMOOTH_SKY_STONE_STAIRS);
     private final IBlockDefinition skyStoneBrickStairs = block("sky_stone_brick_stairs", AEBlocks.SKY_STONE_BRICK_STAIRS);
@@ -43,13 +44,13 @@ public final class ApiBlocks implements IBlocks {
     private final IBlockDefinition quartzSlab = block("quartz_slab", AEBlocks.QUARTZ_SLAB);
     private final IBlockDefinition chiseledQuartzSlab = block("chiseled_quartz_slab", AEBlocks.CHISELED_QUARTZ_SLAB);
     private final IBlockDefinition quartzPillarSlab = block("quartz_pillar_slab", AEBlocks.QUARTZ_PILLAR_SLAB);
-    private final ITileDefinition grindstone = TileDefinition.disabled("grindstone");
+    private final ITileDefinition grindstone = LegacyAeItemMappings.tileDefinition("grindstone", "grindstone", 0);
     private final ITileDefinition crank = tile("crank", AEBlocks.CRANK, AEBlockEntities.CRANK);
     private final ITileDefinition inscriber = tile("inscriber", AEBlocks.INSCRIBER, AEBlockEntities.INSCRIBER);
     private final ITileDefinition wirelessAccessPoint = tile("wireless_access_point", AEBlocks.WIRELESS_ACCESS_POINT, AEBlockEntities.WIRELESS_ACCESS_POINT);
     private final ITileDefinition charger = tile("charger", AEBlocks.CHARGER, AEBlockEntities.CHARGER);
     private final IBlockDefinition tinyTNT = block("tiny_tnt", AEBlocks.TINY_TNT);
-    private final ITileDefinition securityStation = TileDefinition.disabled("security_station");
+    private final ITileDefinition securityStation = LegacyAeItemMappings.tileDefinition("security_station", "security_station", 0);
     private final ITileDefinition quantumRing = tile("quantum_ring", AEBlocks.QUANTUM_RING, AEBlockEntities.QUANTUM_BRIDGE);
     private final ITileDefinition quantumLink = tile("quantum_link", AEBlocks.QUANTUM_LINK, AEBlockEntities.QUANTUM_BRIDGE);
     private final ITileDefinition spatialPylon = tile("spatial_pylon", AEBlocks.SPATIAL_PYLON, AEBlockEntities.SPATIAL_PYLON);

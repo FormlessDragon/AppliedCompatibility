@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 )
 public class AppliedCompatibility {
 
+    public static final String LEGACY_AE_MOD_ID = "appliedenergistics2";
     public static final Logger LOGGER = LogManager.getLogger(Tags.MOD_NAME);
 
     @SidedProxy(clientSide = "github.formlessdragon.appcompat.proxy.ClientProxy", serverSide = "github.formlessdragon.appcompat.proxy.CommonProxy")

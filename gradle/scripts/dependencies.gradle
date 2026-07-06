@@ -44,6 +44,8 @@ dependencies {
     //ae2
     modImplementation("com.github.FormlessDragon:Applied-Energistics-2-Supergiant:v1.0.9:dev")
 
+    modImplementation "com.github.FormlessDragon:MEGACells:v1.0.0:dev"
+
     //mekeng
     modCompileOnly "curse.maven:mekanism-268560:2835175"
     modCompileOnly "com.github.FormlessDragon:Applied-Mekanistics:v1.1.0:dev"

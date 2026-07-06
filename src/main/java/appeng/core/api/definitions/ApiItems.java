@@ -6,6 +6,7 @@ import appeng.api.util.AEColoredItemDefinition;
 import appeng.core.features.ColoredItemDefinition;
 import appeng.core.features.ItemDefinition;
 import ae2.core.definitions.AEItems;
+import github.formlessdragon.appcompat.bridge.ae.LegacyAeItemMappings;
 
 public final class ApiItems implements IItems {
 
@@ -28,8 +29,8 @@ public final class ApiItems implements IItems {
     private final IItemDefinition wirelessCraftingTerminal = item("wireless_crafting_terminal", AEItems.WIRELESS_CRAFTING_TERMINAL);
     private final IItemDefinition wirelessPatternTerminal = item("wireless_pattern_terminal", AEItems.WIRELESS_PATTERN_ENCODING_TERMINAL);
     private final IItemDefinition wirelessInterfaceTerminal = item("wireless_interface_terminal", AEItems.WIRELESS_PATTERN_ACCESS_TERMINAL);
-    private final IItemDefinition wirelessFluidTerminal = disabled("wireless_fluid_terminal");
-    private final IItemDefinition biometricCard = disabled("biometric_card");
+    private final IItemDefinition wirelessFluidTerminal = legacy("wireless_fluid_terminal");
+    private final IItemDefinition biometricCard = legacy("biometric_card");
     private final IItemDefinition chargedStaff = item("charged_staff", AEItems.CHARGED_STAFF);
     private final IItemDefinition massCannon = item("matter_cannon", AEItems.MATTER_CANNON);
     private final IItemDefinition memoryCard = item("memory_card", AEItems.MEMORY_CARD);
@@ -49,7 +50,7 @@ public final class ApiItems implements IItems {
     private final IItemDefinition spatialCell16 = item("spatial_storage_cell_16_cubed", AEItems.SPATIAL_CELL16);
     private final IItemDefinition spatialCell128 = item("spatial_storage_cell_128_cubed", AEItems.SPATIAL_CELL128);
     private final IItemDefinition facade = item("facade", AEItems.FACADE);
-    private final IItemDefinition crystalSeed = disabled("crystal_seed");
+    private final IItemDefinition crystalSeed = legacy("crystal_seed");
     private final IItemDefinition encodedPattern = item("encoded_pattern", AEItems.PROCESSING_PATTERN);
     private final IItemDefinition colorApplicator = item("color_applicator", AEItems.COLOR_APPLICATOR);
     private final AEColoredItemDefinition coloredPaintBall = new ColoredItemDefinition(AEItems.COLORED_PAINT_BALL);
@@ -285,7 +286,7 @@ public final class ApiItems implements IItems {
         return new ItemDefinition(identifier, definition);
     }
 
-    private static IItemDefinition disabled(final String identifier) {
-        return ItemDefinition.disabled(identifier);
+    private static IItemDefinition legacy(final String identifier) {
+        return LegacyAeItemMappings.itemDefinition(identifier, identifier, 0);
     }
 }

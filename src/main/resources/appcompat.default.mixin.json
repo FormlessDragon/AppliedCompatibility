@@ -4,5 +4,8 @@
   "package": "github.formlessdragon.appcompat.mixins.mc",
   "compatibilityLevel": "JAVA_25",
   "target": "@env(DEFAULT)",
-  "mixins": []
+  "mixins": [
+    "MixinCraftingHelper",
+    "MixinGameRegistry"
+  ]
 }

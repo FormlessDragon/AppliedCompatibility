@@ -4,7 +4,7 @@ import appeng.api.definitions.IItemDefinition;
 import appeng.api.definitions.IMaterials;
 import appeng.core.features.ItemDefinition;
 import ae2.core.definitions.AEItems;
-import net.minecraft.init.Items;
+import github.formlessdragon.appcompat.bridge.ae.LegacyAeItemMappings;
 
 public final class ApiMaterials implements IMaterials {
 
@@ -27,9 +27,9 @@ public final class ApiMaterials implements IMaterials {
     private final IItemDefinition engProcessor = item("material.processor.engineering", AEItems.ENGINEERING_PROCESSOR);
     private final IItemDefinition basicCard = item("material.card.basic", AEItems.BASIC_CARD);
     private final IItemDefinition advCard = item("material.card.advanced", AEItems.ADVANCED_CARD);
-    private final IItemDefinition purifiedCertusQuartzCrystal = disabled("material.crystal.quartz.certus.purified");
-    private final IItemDefinition purifiedNetherQuartzCrystal = new ItemDefinition("material.crystal.quartz.nether.purified", Items.QUARTZ);
-    private final IItemDefinition purifiedFluixCrystal = disabled("material.crystal.fluix.purified");
+    private final IItemDefinition purifiedCertusQuartzCrystal = legacyMaterial("material.crystal.quartz.certus.purified", 10);
+    private final IItemDefinition purifiedNetherQuartzCrystal = legacyMaterial("material.crystal.quartz.nether.purified", 11);
+    private final IItemDefinition purifiedFluixCrystal = legacyMaterial("material.crystal.fluix.purified", 12);
     private final IItemDefinition cell1kPart = item("material.cell.storage.1k", AEItems.CELL_COMPONENT_1K);
     private final IItemDefinition cell4kPart = item("material.cell.storage.4k", AEItems.CELL_COMPONENT_4K);
     private final IItemDefinition cell16kPart = item("material.cell.storage.16k", AEItems.CELL_COMPONENT_16K);
@@ -46,9 +46,9 @@ public final class ApiMaterials implements IMaterials {
     private final IItemDefinition cardCrafting = item("material.card.crafting", AEItems.CRAFTING_CARD);
     private final IItemDefinition cardSticky = item("material.card.sticky", AEItems.STICKY_CARD);
     private final IItemDefinition enderDust = item("material.dust.ender", AEItems.ENDER_DUST);
-    private final IItemDefinition flour = disabled("material.flour");
-    private final IItemDefinition goldDust = disabled("material.dust.gold");
-    private final IItemDefinition ironDust = disabled("material.dust.iron");
+    private final IItemDefinition flour = legacyMaterial("material.flour", 4);
+    private final IItemDefinition goldDust = legacyMaterial("material.dust.gold", 51);
+    private final IItemDefinition ironDust = legacyMaterial("material.dust.iron", 49);
     private final IItemDefinition fluixDust = item("material.dust.fluix", AEItems.FLUIX_DUST);
     private final IItemDefinition certusQuartzDust = item("material.dust.quartz.certus", AEItems.CERTUS_QUARTZ_DUST);
     private final IItemDefinition netherQuartzDust = item("material.dust.quartz.nether", AEItems.QUARTZ_BLEND);
@@ -57,7 +57,7 @@ public final class ApiMaterials implements IMaterials {
     private final IItemDefinition certusQuartzCrystalCharged = item("material.crystal.quartz.certus.charged", AEItems.CERTUS_QUARTZ_CRYSTAL_CHARGED);
     private final IItemDefinition fluixCrystal = item("material.crystal.fluix", AEItems.FLUIX_CRYSTAL);
     private final IItemDefinition fluixPearl = item("material.pearl.fluix", AEItems.FLUIX_PEARL);
-    private final IItemDefinition woodenGear = disabled("material.gear.wooden");
+    private final IItemDefinition woodenGear = legacyMaterial("material.gear.wooden", 40);
     private final IItemDefinition wirelessReceiver = item("material.wireless.receiver", AEItems.WIRELESS_RECEIVER);
     private final IItemDefinition wirelessBooster = item("material.wireless.booster", AEItems.WIRELESS_BOOSTER);
     private final IItemDefinition annihilationCore = item("material.core.annihilation", AEItems.ANNIHILATION_CORE);
@@ -198,7 +198,7 @@ public final class ApiMaterials implements IMaterials {
         return new ItemDefinition(identifier, definition);
     }
 
-    private static IItemDefinition disabled(final String identifier) {
-        return ItemDefinition.disabled(identifier);
+    private static IItemDefinition legacyMaterial(final String identifier, final int meta) {
+        return LegacyAeItemMappings.itemDefinition(identifier, "material", meta);
     }
 }

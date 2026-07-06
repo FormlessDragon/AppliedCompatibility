@@ -6,6 +6,7 @@ import appeng.api.util.AEColoredItemDefinition;
 import appeng.core.features.ColoredItemDefinition;
 import appeng.core.features.ItemDefinition;
 import ae2.core.definitions.AEParts;
+import github.formlessdragon.appcompat.bridge.ae.LegacyAeItemMappings;
 
 public final class ApiParts implements IParts {
 
@@ -29,7 +30,7 @@ public final class ApiParts implements IParts {
     private final IItemDefinition fluidIface = item("part.interface.fluid", AEParts.INTERFACE);
     private final IItemDefinition levelEmitter = item("part.level_emitter", AEParts.LEVEL_EMITTER);
     private final IItemDefinition annihilationPlane = item("part.annihilation_plane", AEParts.ANNIHILATION_PLANE);
-    private final IItemDefinition identityAnnihilationPlane = disabled("part.annihilation_plane.identity");
+    private final IItemDefinition identityAnnihilationPlane = legacyPart("part.annihilation_plane.identity", 301);
     private final IItemDefinition formationPlane = item("part.formation_plane", AEParts.FORMATION_PLANE);
     private final IItemDefinition p2PTunnelME = item("part.p2p_tunnel.me", AEParts.ME_P2P_TUNNEL);
     private final IItemDefinition p2PTunnelRedstone = item("part.p2p_tunnel.redstone", AEParts.REDSTONE_P2P_TUNNEL);
@@ -37,7 +38,7 @@ public final class ApiParts implements IParts {
     private final IItemDefinition p2PTunnelFluids = item("part.p2p_tunnel.fluid", AEParts.FLUID_P2P_TUNNEL);
     private final IItemDefinition p2PTunnelEU = item("part.p2p_tunnel.eu", AEParts.IC2_P2P_TUNNEL);
     private final IItemDefinition p2PTunnelFE = item("part.p2p_tunnel.fe", AEParts.FE_P2P_TUNNEL);
-    private final IItemDefinition p2PTunnelGTEU = disabled("part.p2p_tunnel.gteu");
+    private final IItemDefinition p2PTunnelGTEU = legacyPart("part.p2p_tunnel.gteu", 470);
     private final IItemDefinition p2PTunnelLight = item("part.p2p_tunnel.light", AEParts.LIGHT_P2P_TUNNEL);
     private final IItemDefinition cableAnchor = item("part.cable_anchor", AEParts.CABLE_ANCHOR);
     private final IItemDefinition monitor = item("part.monitor", AEParts.MONITOR);
@@ -178,7 +179,7 @@ public final class ApiParts implements IParts {
         return new ItemDefinition(identifier, definition);
     }
 
-    private static IItemDefinition disabled(final String identifier) {
-        return ItemDefinition.disabled(identifier);
+    private static IItemDefinition legacyPart(final String identifier, final int meta) {
+        return LegacyAeItemMappings.itemDefinition(identifier, "part", meta);
     }
 }

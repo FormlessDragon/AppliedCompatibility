@@ -14,4 +14,6 @@ public final class AppCompatConfig {
     public static boolean enablePackagingProvider = true;
 
     public static boolean enableEnderIOAppliedEnergistics = true;
+
+    public static boolean enableLegacyAeItemIdRemapping = true;
 }
