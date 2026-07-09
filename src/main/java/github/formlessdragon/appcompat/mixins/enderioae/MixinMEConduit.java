@@ -1,9 +1,11 @@
 package github.formlessdragon.appcompat.mixins.enderioae;
 
 import ae2.api.networking.GridHelper;
+import ae2.api.networking.IGridNode;
 import crazypants.enderio.base.conduit.ConnectionMode;
 import crazypants.enderio.conduit.me.conduit.MEConduit;
 import crazypants.enderio.conduits.conduit.TileConduitBundle;
+import github.formlessdragon.appcompat.util.enderioae.RescanScheduler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -33,6 +35,16 @@ public abstract class MixinMEConduit {
         if (tile instanceof TileConduitBundle) {
             return false;
         }
-        return GridHelper.getExposedNode(world, pos, dir.getOpposite()) != null;
+
+        final IGridNode node = GridHelper.getExposedNode(world, pos, dir.getOpposite());
+        if (node != null) {
+            return true;
+        }
+
+        if (GridHelper.getNodeHost(world, pos) != null) {
+            RescanScheduler.schedule(world, conduit.getBundle().getLocation(), pos);
+        }
+
+        return false;
     }
 }
