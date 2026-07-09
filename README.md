@@ -11,3 +11,11 @@ A plugin for Applied Energistics 2 Supergiant that fixes compatibility for mods 
 [PackagedAuto](https://www.curseforge.com/minecraft/mc-mods/packagedauto) v1.0.24.73
 
 [EnderIO](https://www.curseforge.com/minecraft/mc-mods/ender-io) 1.12.2-5.3.72
+
+PlusTiC
+
+[Building Gadgets](https://www.curseforge.com/minecraft/mc-mods/building-gadgets)
+
+[Sonar Core](https://www.curseforge.com/minecraft/mc-mods/sonar-core)
+
+[PneumaticCraft](https://www.curseforge.com/minecraft/mc-mods/pneumaticcraft-repressurized) 1.12.2-0.11.15-398

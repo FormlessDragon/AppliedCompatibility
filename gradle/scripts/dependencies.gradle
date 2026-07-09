@@ -61,7 +61,8 @@ dependencies {
     //mmce
     //modRuntimeOnly 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.711'
     modImplementation "curse.maven:the-one-probe-245211:2667280"
-    modCompileOnly "curse.maven:modularmachinery-community-edition-817377:7372951"
+    modImplementation "curse.maven:modularmachinery-community-edition-817377:7372951"
+    modImplementation("curse.maven:modular-machinery-community-edition-addons-1236022:8175673")
 
     // Inventory Bogo-Sorter
     modImplementation "curse.maven:inventory-bogosorter-632327:8231600"
@@ -74,4 +75,9 @@ dependencies {
     modImplementation("com.enderio.core:EnderCore:1.12.2-0.5.78:core")
     modImplementation("com.enderio.core:EnderCore:1.12.2-0.5.78")
     modImplementation("com.enderio:EnderIO:1.12.2-5.3.72") {transitive = false}
+
+    modCompileOnly("curse.maven:plusticminusbad-376903:4703532")
+    modImplementation("curse.maven:sonar-core-239418:2645156")
+    modImplementation("curse.maven:building-gadgets-298187:3005950")
+    modImplementation("curse.maven:pneumaticcraft-repressurized-281849:2978408")
 }
