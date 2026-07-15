@@ -1,32 +1,5 @@
 apply from: 'gradle/scripts/helpers.gradle'
 
-repositories {
-    // Other repositories described by default:
-    // CleanroomMC: https://maven.cleanroommc.com
-    maven {
-        name = 'CurseMaven'
-        url = 'https://cursemaven.com'
-    }
-    maven {
-        name = 'CleanroomCurseMaven'
-        url = 'https://curse.cleanroommc.com'
-    }
-    maven {
-        name = 'Modrinth'
-        url = 'https://api.modrinth.com/maven'
-    }
-    maven {
-        name = "ModMaven"
-        url  = uri("https://modmaven.dev/")
-    }
-    maven {
-        url = "https://maven.crystaelix.com/releases/"
-    }
-    mavenCentral()
-    mavenLocal()
-    maven { url 'https://jitpack.io' }
-}
-
 dependencies {
     compileOnly "com.cleanroommc:sponge-mixin:0.20.12+mixin.0.8.7"
     if (propertyBool('enable_lwjglx')) {
@@ -47,8 +20,8 @@ dependencies {
     modImplementation "com.github.FormlessDragon:MEGACells:v1.0.0:dev"
 
     //mekeng
-    modCompileOnly "curse.maven:mekanism-268560:2835175"
-    modCompileOnly "com.github.FormlessDragon:Applied-Mekanistics:v1.1.0:dev"
+    modImplementation "curse.maven:mekanism-268560:2835175"
+    modImplementation "com.github.FormlessDragon:Applied-Mekanistics:v1.1.0:dev"
 
     //packagedauto
     modImplementation "thelm.packagedauto:PackagedAuto-1.12.2:1.0.24.73"
@@ -59,7 +32,7 @@ dependencies {
     modCompileOnly("curse.maven:gregtechceu-557242:5519022")
 
     //mmce
-    //modRuntimeOnly 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.711'
+    modRuntimeOnly 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.711'
     modImplementation "curse.maven:the-one-probe-245211:2667280"
     modImplementation "curse.maven:modularmachinery-community-edition-817377:7372951"
     modImplementation("curse.maven:modular-machinery-community-edition-addons-1236022:8175673")
@@ -76,7 +49,7 @@ dependencies {
     modImplementation("com.enderio.core:EnderCore:1.12.2-0.5.78")
     modImplementation("com.enderio:EnderIO:1.12.2-5.3.72") {transitive = false}
 
-    modCompileOnly("curse.maven:plusticminusbad-376903:4703532")
+    modImplementation("curse.maven:plusticminusbad-376903:4703532")
     modImplementation("curse.maven:sonar-core-239418:2645156")
     modImplementation("curse.maven:building-gadgets-298187:3005950")
     modImplementation("curse.maven:pneumaticcraft-repressurized-281849:2978408")

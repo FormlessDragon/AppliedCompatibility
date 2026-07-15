@@ -2,6 +2,7 @@ package github.formlessdragon.appcompat.bridge.enderioae;
 
 import ae2.api.networking.GridHelper;
 import ae2.api.networking.IManagedGridNode;
+import ae2.api.util.AEColor;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridBlock;
@@ -29,6 +30,7 @@ public final class EnderIOLegacyGridNode implements IGridNode {
     private final EnumSet<GridFlags> initialFlags;
     private int playerId = -1;
     private boolean createScheduled;
+    private boolean connectionRefreshRequested;
     private boolean destroyed;
 
     public EnderIOLegacyGridNode(final IGridBlock gridBlock, final EnderIOGridBlockAccess access) {
@@ -141,7 +143,13 @@ public final class EnderIOLegacyGridNode implements IGridNode {
             throw new IllegalStateException("EnderIO ME conduit node was updated after destroy");
         }
         applyRuntimeGridBlockState();
-        if (this.managedNode.isReady() || this.createScheduled) {
+        if (this.managedNode.isReady()) {
+            if (this.connectionRefreshRequested) {
+                refreshConnections();
+            }
+            return;
+        }
+        if (this.createScheduled) {
             return;
         }
         final World world = this.access.appcompat$world();
@@ -158,7 +166,20 @@ public final class EnderIOLegacyGridNode implements IGridNode {
                 this.managedNode.create(world, this.access.appcompat$pos());
             }
             this.createScheduled = false;
+            refreshConnections();
         });
+    }
+
+    public void refreshConnections() {
+        if (this.destroyed) {
+            return;
+        }
+        this.connectionRefreshRequested = true;
+        if (!this.managedNode.isReady()) {
+            return;
+        }
+        this.connectionRefreshRequested = false;
+        this.managedNode.setGridColor(AEColor.TRANSPARENT);
     }
 
     @Override

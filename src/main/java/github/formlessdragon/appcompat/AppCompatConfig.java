@@ -15,5 +15,7 @@ public final class AppCompatConfig {
 
     public static boolean enableEnderIOAppliedEnergistics = true;
 
+    public static boolean enablePneumaticCraft = true;
+
     public static boolean enableLegacyAeItemIdRemapping = true;
 }

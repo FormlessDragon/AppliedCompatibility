@@ -37,6 +37,7 @@
     "packagedauto.MixinTilePackager",
     "packagedauto.MixinTilePackagerExtension",
     "packagedauto.MixinTileUnpackager",
+    "pneumaticcraft.MixinSemiBlockRequester",
     "packagingprovider.MixinTilePackagingProvider"
   ],
   "client": [
