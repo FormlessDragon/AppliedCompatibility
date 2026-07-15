@@ -25,6 +25,7 @@ import appeng.api.storage.ISaveProvider;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import com.mojang.authlib.GameProfile;
+import github.formlessdragon.appcompat.AppliedCompatibility;
 import github.formlessdragon.appcompat.bridge.ae.LegacyAeCellInventoryHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -306,6 +307,7 @@ public class RegistryContainer implements IRegistryContainer {
         private final Object2ObjectOpenHashMap<GrinderCacheKey, IGrinderRecipe> recipes =
             new Object2ObjectOpenHashMap<>();
         private final Object2IntOpenHashMap<String> dustRatios = new Object2IntOpenHashMap<>();
+        private boolean missingGrindstoneWarningLogged;
 
         @Override
         public IGrinderRecipeBuilder builder() {
@@ -325,6 +327,11 @@ public class RegistryContainer implements IRegistryContainer {
                 return false;
             }
             this.recipes.put(key, recipe);
+            if (!this.missingGrindstoneWarningLogged) {
+                this.missingGrindstoneWarningLogged = true;
+                AppliedCompatibility.LOGGER.warn("New AE has no grindstone; this grinder recipe is retained only "
+                    + "as old ABI registry data.");
+            }
             return true;
         }
 
