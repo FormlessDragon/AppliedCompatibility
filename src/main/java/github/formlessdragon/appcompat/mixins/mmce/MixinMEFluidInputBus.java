@@ -7,22 +7,27 @@ import ae2.api.networking.ticking.IGridTickable;
 import ae2.api.networking.ticking.TickRateModulation;
 import ae2.api.networking.ticking.TickingRequest;
 import ae2.me.helpers.IGridConnectedTile;
-import appeng.api.networking.ticking.ITickManager;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.fluids.util.AEFluidInventory;
 import appeng.fluids.util.IAEFluidTank;
 import github.formlessdragon.appcompat.bridge.mmce.AppCompatFluidBridge;
 import github.kasuminova.mmce.common.tile.MEFluidInputBus;
 import github.kasuminova.mmce.common.tile.base.MEFluidBus;
+import net.minecraft.nbt.NBTTagCompound;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.concurrent.locks.ReadWriteLock;
 
 @Mixin(value = MEFluidInputBus.class, remap = false)
 public abstract class MixinMEFluidInputBus extends MEFluidBus implements IGridTickable {
+
+    @Shadow
+    @Final
+    private AEFluidInventory config;
 
     @Shadow
     public abstract IAEFluidTank getConfig();
@@ -134,25 +139,43 @@ public abstract class MixinMEFluidInputBus extends MEFluidBus implements IGridTi
         }
     }
 
-    @Redirect(
-        method = {"markNoUpdate", "uploadSettings"},
-        at = @At(
-            value = "INVOKE",
-            target = "Lappeng/api/networking/ticking/ITickManager;alertDevice(Lappeng/api/networking/IGridNode;)Z",
-            remap = false
-        ),
-        require = 0
-    )
-    private boolean appcompat$redirectAlert(final ITickManager tick,
-                                            final appeng.api.networking.IGridNode oldNode) {
-        final IManagedGridNode node = ((IGridConnectedTile) this).getMainNode();
-        if (node != null) {
-            final IGrid grid = node.getGrid();
-            final IGridNode gridNode = node.getNode();
-            if (grid != null && gridNode != null) {
-                grid.getTickManager().alertDevice(gridNode);
-            }
+    /**
+     * @author circulation
+     * @reason Routes legacy invalidation through the active managed node.
+     */
+    @Overwrite
+    public void markNoUpdate() {
+        if (needsUpdate()) {
+            appcompat$alertManagedNode();
         }
-        return true;
+        super.markNoUpdate();
+    }
+
+    /**
+     * @author circulation
+     * @reason Avoids the legacy proxy tick manager after settings changes.
+     */
+    @Overwrite
+    public void uploadSettings(final NBTTagCompound settings) {
+        config.readFromNBT(settings, "config");
+        markForUpdate();
+        if (!needsUpdate()) {
+            appcompat$alertManagedNode();
+        }
+    }
+
+    @Unique
+    private boolean appcompat$alertManagedNode() {
+        final IManagedGridNode managedNode = ((IGridConnectedTile) this).getMainNode();
+        if (managedNode == null || !managedNode.isReady() || !managedNode.isActive()) {
+            return false;
+        }
+        final IGrid grid = managedNode.getGrid();
+        final IGridNode gridNode = managedNode.getNode();
+        if (grid == null || gridNode == null) {
+            return false;
+        }
+        final var tickManager = grid.getTickManager();
+        return tickManager != null && tickManager.alertDevice(gridNode);
     }
 }

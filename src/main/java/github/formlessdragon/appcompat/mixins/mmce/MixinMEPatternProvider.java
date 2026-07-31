@@ -21,10 +21,12 @@ import ae2.helpers.patternprovider.PatternContainer;
 import ae2.me.helpers.ActionHostEnergySource;
 import ae2.text.TextComponentItemStack;
 import ae2.util.inv.SupplierInternalInventory;
-import appeng.api.networking.events.MENetworkEvent;
+import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.tile.inventory.AppEngInternalInventory;
+import appeng.util.inv.InvOperation;
 import github.formlessdragon.appcompat.bridge.mmce.PatternProviderCacheExtensions;
 import github.kasuminova.mmce.common.tile.MEPatternProvider;
+import github.kasuminova.mmce.common.util.AEFluidInventoryUpgradeable;
 import github.kasuminova.mmce.common.util.InfItemFluidHandler;
 import hellfirepvp.modularmachinery.ModularMachinery;
 import hellfirepvp.modularmachinery.common.CommonProxy;
@@ -38,6 +40,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -46,7 +49,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
@@ -76,6 +78,21 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
     protected InfItemFluidHandler handler;
     @Shadow
     @Final
+    protected AppEngInternalInventory subItemHandler;
+    @Shadow
+    @Final
+    protected AEFluidInventoryUpgradeable subFluidHandler;
+    @Shadow
+    @Final
+    protected ICraftingPatternDetails[] details;
+    @Shadow
+    protected MEPatternProvider.WorkModeSetting workMode;
+    @Shadow
+    protected int currentPatternIdx;
+    @Shadow
+    protected ICraftingPatternDetails currentPattern;
+    @Shadow
+    @Final
     protected List<MachineComponent<?>> combinationComponents;
     @Shadow
     private String machineName;
@@ -84,6 +101,9 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
 
     @Shadow
     public abstract AppEngInternalInventory getPatterns();
+
+    @Shadow
+    protected abstract void refreshPattern(int slot);
 
     @Shadow
     public abstract InfItemFluidHandler getInfHandler();
@@ -233,9 +253,11 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
     @Unique
     private void appcompat$requestPatternUpdate() {
         final IManagedGridNode node = this.getMainNode();
-        if (node != null && node.getNode() != null && node.isReady() && node.hasGridBooted()) {
-            ICraftingProvider.requestUpdate(node);
+        if (node == null || !node.isReady() || !node.hasGridBooted()
+            || node.getNode() == null || node.getGrid() == null) {
+            return;
         }
+        ICraftingProvider.requestUpdate(node);
     }
 
     @Override
@@ -291,6 +313,81 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
             name = TextComponentItemStack.of(iconStack);
         }
         return new PatternContainerGroup(icon, name, Collections.emptyList());
+    }
+
+    /**
+     * @author circulation
+     * @reason 旧实现的 IntStream method reference 固化为 ItemStackHandler 接收者
+     */
+    @Overwrite
+    public boolean isAllDefault() {
+        for (int slot = 0; slot < this.subItemHandler.getSlots(); slot++) {
+            if (!this.subItemHandler.getStackInSlot(slot).isEmpty()) {
+                return false;
+            }
+        }
+        if (this.subFluidHandler.getFluidInSlot(0) != null) {
+            return false;
+        }
+        final AppEngInternalInventory patterns = getPatterns();
+        for (int slot = 0; slot < patterns.getSlots(); slot++) {
+            if (!patterns.getStackInSlot(slot).isEmpty()) {
+                return false;
+            }
+        }
+        return this.workMode == MEPatternProvider.WorkModeSetting.DEFAULT && this.handler.isEmpty();
+    }
+
+    /**
+     * @author circulation
+     * @reason 旧 proxy 在节点尚未入网时没有 grid，样板更新改走新 AE provider service
+     */
+    @Overwrite
+    public void notifyNeighbors() {
+        appcompat$requestPatternUpdate();
+        final var world = getWorld();
+        if (world != null) {
+            appeng.util.Platform.notifyBlocksOfNeighbors(world, getPos());
+        }
+    }
+
+    /**
+     * @author circulation
+     * @reason 保留旧样板缓存刷新语义，同时禁止向 legacy proxy 投递事件
+     */
+    @Overwrite
+    protected void refreshPatterns() {
+        for (int slot = 0; slot < MEPatternProvider.PATTERNS; slot++) {
+            refreshPattern(slot);
+        }
+        if (this.currentPatternIdx >= 0 && this.currentPatternIdx < this.details.length) {
+            final ICraftingPatternDetails pattern = this.details[this.currentPatternIdx];
+            if (pattern == null) {
+                this.currentPatternIdx = -1;
+                this.currentPattern = null;
+            } else {
+                for (int slot = 0; slot < this.details.length; slot++) {
+                    if (pattern.equals(this.details[slot])) {
+                        this.currentPatternIdx = slot;
+                    }
+                }
+                this.currentPattern = pattern;
+            }
+        }
+        appcompat$requestPatternUpdate();
+    }
+
+    /**
+     * @author circulation
+     * @reason 样板变更不再访问未入网 legacy proxy
+     */
+    @Overwrite
+    public void onChangeInventory(final IItemHandler inventory, final int slot, final InvOperation operation,
+                                  final ItemStack removedStack, final ItemStack newStack) {
+        if (slot >= 0 && slot < MEPatternProvider.PATTERNS) {
+            refreshPattern(slot);
+        }
+        appcompat$requestPatternUpdate();
     }
 
     /**
@@ -367,20 +464,6 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
         }
 
         PatternProviderCacheExtensions.returnStacks(grid, this, infHandler);
-    }
-
-    @Redirect(
-        method = {"notifyNeighbors", "refreshPatterns", "onChangeInventory"},
-        at = @At(
-            value = "INVOKE",
-            target = "Lappeng/api/networking/IGrid;postEvent(Lappeng/api/networking/events/MENetworkEvent;)Lappeng/api/networking/events/MENetworkEvent;",
-            remap = false
-        ),
-        require = 0
-    )
-    private MENetworkEvent appcompat$redirectPostEvent(final appeng.api.networking.IGrid instance, final MENetworkEvent meNetworkEvent) {
-        appcompat$requestPatternUpdate();
-        return meNetworkEvent;
     }
 
     @Inject(method = "readCustomNBT", at = @At("TAIL"))

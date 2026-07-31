@@ -43,6 +43,7 @@ assertProperty 'mod_version'
 assertProperty 'root_package'
 assertProperty 'mod_id'
 assertProperty 'mod_name'
+assertProperty 'legacy_ae_mod_id'
 
 assertSubProperties 'use_lombok_ap', 'lombok_version'
 assertSubProperties 'use_access_transformer', 'access_transformer_locations'
@@ -231,6 +232,7 @@ public final class Tags {
 
 processResources {
     rename '(.+_at.cfg)', 'META-INF/$1'
+    def legacyAeModId = propertyString('legacy_ae_mod_id')
     def resourceProps = [
         mod_id               : propertyString('mod_id'),
         mod_name             : propertyString('mod_name'),
@@ -248,7 +250,11 @@ processResources {
         mod_background_path  : propertyString('mod_background_path')
     ]
     inputs.properties(resourceProps)
-    filesMatching(['mcmod.info', 'pack.mcmeta']) {
+    inputs.property('legacy_ae_mod_id', legacyAeModId)
+    filesMatching('mcmod.info') {
+        expand(resourceProps + [mod_id: legacyAeModId])
+    }
+    filesMatching('pack.mcmeta') {
         expand(resourceProps)
     }
 }

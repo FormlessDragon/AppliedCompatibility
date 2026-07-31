@@ -17,5 +17,7 @@ public final class AppCompatConfig {
 
     public static boolean enablePneumaticCraft = true;
 
+    public static boolean enableBuildingGadgets = true;
+
     public static boolean enableLegacyAeItemIdRemapping = true;
 }

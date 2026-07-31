@@ -10,6 +10,7 @@ public final class AppCompatMixinDecisions {
     private static boolean enablePackagingProvider = true;
     private static boolean enableEnderIOAppliedEnergistics = true;
     private static boolean enablePneumaticCraft = true;
+    private static boolean enableBuildingGadgets = true;
     public static final boolean mmceLoaded = Loader.isModLoaded("modularmachinery");
     public static final boolean topLoaded = Loader.isModLoaded("theoneprobe");
     public static final boolean mekengLoaded = Loader.isModLoaded("mekeng");
@@ -18,6 +19,7 @@ public final class AppCompatMixinDecisions {
     public static final boolean packagingproviderLoaded = Loader.isModLoaded("packagingprovider");
     public static final boolean enderioaeLoaded = Loader.isModLoaded("enderioconduitsappliedenergistics");
     public static final boolean pneumaticcraftLoaded = Loader.isModLoaded("pneumaticcraft");
+    public static final boolean buildingGadgetsLoaded = Loader.isModLoaded("buildinggadgets");
     public static final boolean jeiLoaded = Loader.isModLoaded("jei");
 
     private AppCompatMixinDecisions() {
@@ -30,6 +32,7 @@ public final class AppCompatMixinDecisions {
         enablePackagingProvider = AppCompatConfig.enablePackagingProvider;
         enableEnderIOAppliedEnergistics = AppCompatConfig.enableEnderIOAppliedEnergistics;
         enablePneumaticCraft = AppCompatConfig.enablePneumaticCraft;
+        enableBuildingGadgets = AppCompatConfig.enableBuildingGadgets;
     }
 
     public static boolean shouldApply(final String mixinName) {
@@ -47,6 +50,7 @@ public final class AppCompatMixinDecisions {
             case "packagingprovider" -> enablePackagingProvider && packagingproviderLoaded;
             case "enderioae" -> enableEnderIOAppliedEnergistics && enderioaeLoaded;
             case "pneumaticcraft" -> enablePneumaticCraft && pneumaticcraftLoaded;
+            case "buildinggadgets" -> enableBuildingGadgets && buildingGadgetsLoaded;
             default -> true;
         };
     }

@@ -15,13 +15,15 @@ import ae2.api.stacks.AEItemKey;
 import ae2.api.stacks.AEKey;
 import ae2.api.stacks.KeyCounter;
 import github.formlessdragon.appcompat.bridge.ae.LegacyAeStorageBridge;
+import it.unimi.dsi.fastutil.objects.ObjectLists;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
+import it.unimi.dsi.fastutil.objects.ObjectSets;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -41,8 +43,12 @@ public final class PneumaticCraftRequesterNode implements ICraftingProvider {
     private final PneumaticCraftRequesterAccess access;
     private final PneumaticCraftRequesterWatcher craftingWatcher;
     private final PneumaticCraftRequesterWatcher storageWatcher;
+    private final ObjectOpenHashSet<AEKey> emitableItems = new ObjectOpenHashSet<>();
+    private final ObjectOpenHashSet<AEKey> collectedEmitableItems = new ObjectOpenHashSet<>();
+    private final ObjectSet<AEKey> exposedEmitableItems = ObjectSets.unmodifiable(this.emitableItems);
     private IManagedGridNode managedNode;
     private IGridConnection connection;
+    private boolean emitableItemsInitialized;
 
     public PneumaticCraftRequesterNode(final PneumaticCraftRequesterAccess access) {
         this.access = access;
@@ -51,10 +57,19 @@ public final class PneumaticCraftRequesterNode implements ICraftingProvider {
     }
 
     public boolean attach(final World world, final BlockPos pos, final IGridNode interfaceNode) {
+        if (world.isRemote) {
+            throw new IllegalArgumentException("PneumaticCraft requester nodes must be attached on the server");
+        }
         if (interfaceNode == null) {
             return false;
         }
-        boolean changed = false;
+        final boolean emitableItemsChanged = updateEmitableItems();
+        boolean nodeCreated = false;
+        if (this.managedNode != null && !this.managedNode.isReady()) {
+            this.managedNode.destroy();
+            this.connection = null;
+            this.managedNode = null;
+        }
         if (this.managedNode == null) {
             this.managedNode = GridHelper.createManagedNode(this, NODE_LISTENER)
                                          .setInWorldNode(false)
@@ -63,39 +78,43 @@ public final class PneumaticCraftRequesterNode implements ICraftingProvider {
             this.managedNode.addService(ICraftingProvider.class, this);
             this.managedNode.addService(ICraftingWatcherNode.class, this.craftingWatcher);
             this.managedNode.addService(IStorageWatcherNode.class, this.storageWatcher);
-            changed = true;
-        }
-        if (!this.managedNode.isReady()) {
             this.managedNode.create(world, pos);
-            changed = true;
+            nodeCreated = true;
         }
         final IGridNode requesterNode = this.managedNode.getNode();
         if (requesterNode == null) {
-            return false;
+            throw new IllegalStateException("PneumaticCraft requester managed node was not created");
         }
-        if (this.connection != null && this.connection.getOtherSide(requesterNode) != interfaceNode) {
-            this.connection.destroy();
-            this.connection = null;
+        if (this.connection != null) {
+            if (!requesterNode.getConnections().contains(this.connection)) {
+                this.connection = null;
+            } else if (this.connection.getOtherSide(requesterNode) != interfaceNode) {
+                this.connection.destroy();
+                this.connection = null;
+            }
         }
+        boolean connectionCreated = false;
         if (this.connection == null) {
             this.connection = GridHelper.createConnection(interfaceNode, requesterNode);
-            changed = true;
+            connectionCreated = true;
         }
-        if (changed) {
-            refresh();
+        if (emitableItemsChanged || nodeCreated || connectionCreated) {
+            refreshServices();
         }
         return true;
     }
 
     public void disconnect() {
-        if (this.connection != null) {
+        final IGridNode requesterNode = this.managedNode == null ? null : this.managedNode.getNode();
+        if (this.connection != null && requesterNode != null && requesterNode.getConnections().contains(this.connection)) {
             this.connection.destroy();
-            this.connection = null;
         }
+        this.connection = null;
         if (this.managedNode != null) {
             this.managedNode.destroy();
             this.managedNode = null;
         }
+        this.emitableItemsInitialized = false;
     }
 
     public boolean isReady() {
@@ -106,14 +125,20 @@ public final class PneumaticCraftRequesterNode implements ICraftingProvider {
         if (this.managedNode == null || !this.managedNode.isReady()) {
             return;
         }
+        if (updateEmitableItems()) {
+            refreshServices();
+        }
+    }
+
+    private void refreshServices() {
         ICraftingProvider.requestUpdate(this.managedNode);
-        this.craftingWatcher.refresh();
-        this.storageWatcher.refresh();
+        this.craftingWatcher.refresh(this.exposedEmitableItems);
+        this.storageWatcher.refresh(this.exposedEmitableItems);
     }
 
     @Override
     public List<? extends IPatternDetails> getAvailablePatterns() {
-        return Collections.emptyList();
+        return ObjectLists.emptyList();
     }
 
     @Override
@@ -139,18 +164,28 @@ public final class PneumaticCraftRequesterNode implements ICraftingProvider {
 
     @Override
     public Set<AEKey> getEmitableItems() {
-        final Set<AEKey> result = new ObjectOpenHashSet<>();
+        return this.exposedEmitableItems;
+    }
+
+    private boolean updateEmitableItems() {
+        this.collectedEmitableItems.clear();
         for (final appeng.api.storage.data.IAEItemStack stack : this.access.appcompat$getProvidingItems()) {
-            result.add(LegacyAeStorageBridge.toKey(stack));
+            this.collectedEmitableItems.add(LegacyAeStorageBridge.toKey(stack));
         }
         final IItemHandlerModifiable filters = this.access.appcompat$getFilters();
         for (int slot = 0; slot < filters.getSlots(); slot++) {
             final AEItemKey key = AEItemKey.of(filters.getStackInSlot(slot));
             if (key != null) {
-                result.add(key);
+                this.collectedEmitableItems.add(key);
             }
         }
-        return result;
+        if (this.emitableItemsInitialized && this.emitableItems.equals(this.collectedEmitableItems)) {
+            return false;
+        }
+        this.emitableItems.clear();
+        this.emitableItems.addAll(this.collectedEmitableItems);
+        this.emitableItemsInitialized = true;
+        return true;
     }
 
     void updateRequestedAmount(final AEKey key) {
@@ -168,7 +203,11 @@ public final class PneumaticCraftRequesterNode implements ICraftingProvider {
         for (int slot = 0; slot < filters.getSlots(); slot++) {
             final ItemStack filter = filters.getStackInSlot(slot);
             if (!filter.isEmpty() && itemKey.matches(filter)) {
-                filters.setStackInSlot(slot, itemKey.toStack(amount));
+                if (filter.getCount() != amount) {
+                    filters.setStackInSlot(slot, amount > 0 ? itemKey.toStack(amount) : ItemStack.EMPTY);
+                    this.access.appcompat$markRequesterDirty();
+                    refresh();
+                }
                 return;
             }
             if (filter.isEmpty() && freeSlot < 0) {
@@ -177,6 +216,8 @@ public final class PneumaticCraftRequesterNode implements ICraftingProvider {
         }
         if (freeSlot >= 0 && amount > 0) {
             filters.setStackInSlot(freeSlot, itemKey.toStack(amount));
+            this.access.appcompat$markRequesterDirty();
+            refresh();
         }
     }
 
@@ -199,6 +240,7 @@ public final class PneumaticCraftRequesterNode implements ICraftingProvider {
             }
         }
         if (changed) {
+            this.access.appcompat$markRequesterDirty();
             refresh();
         }
     }
@@ -217,7 +259,7 @@ public final class PneumaticCraftRequesterNode implements ICraftingProvider {
         @Override
         public void updateWatcher(final IStackWatcher newWatcher) {
             this.watcher = newWatcher;
-            refresh();
+            refresh(this.owner.exposedEmitableItems);
         }
 
         @Override
@@ -230,7 +272,7 @@ public final class PneumaticCraftRequesterNode implements ICraftingProvider {
         @Override
         public void onCraftableChange(final AEKey what) {
             if (this.crafting) {
-                this.owner.refresh();
+                this.owner.updateRequestedAmount(what);
             }
         }
 
@@ -241,12 +283,12 @@ public final class PneumaticCraftRequesterNode implements ICraftingProvider {
             }
         }
 
-        private void refresh() {
+        private void refresh(final ObjectSet<AEKey> keys) {
             if (this.watcher == null) {
                 return;
             }
             this.watcher.reset();
-            for (final AEKey key : this.owner.getEmitableItems()) {
+            for (final AEKey key : keys) {
                 this.watcher.add(key);
             }
         }

@@ -29,6 +29,9 @@ public abstract class MixinSemiBlockRequester extends SemiBlockLogistics impleme
     private boolean aeMode;
 
     @Shadow
+    private boolean needToCheckForInterface;
+
+    @Shadow
     @Final
     private Set<IProvidingInventoryListener.TileEntityAndFace> providingInventories;
 
@@ -84,23 +87,36 @@ public abstract class MixinSemiBlockRequester extends SemiBlockLogistics impleme
     @Overwrite
     public void update() {
         super.update();
-        if (world.isRemote) {
+        if (world.isRemote || isInvalid()) {
+            if (!world.isRemote && this.appcompat$requesterNode != null) {
+                this.appcompat$requesterNode.disconnect();
+            }
             return;
         }
-        final PneumaticCraftRequesterNode requesterNode = appcompat$getRequesterNode();
         if (!this.aeMode) {
-            requesterNode.disconnect();
+            this.needToCheckForInterface = false;
+            if (this.appcompat$requesterNode != null) {
+                this.appcompat$requesterNode.disconnect();
+            }
             return;
         }
         final TileEntity tile = getTileEntity();
-        if (!(tile instanceof TileInterface interfaceTile)) {
-            requesterNode.disconnect();
+        if (!(tile instanceof TileInterface interfaceTile) || tile.isInvalid()
+            || !interfaceTile.getMainNode().isReady()) {
+            this.needToCheckForInterface = true;
+            if (this.appcompat$requesterNode != null) {
+                this.appcompat$requesterNode.disconnect();
+            }
             return;
         }
+        final PneumaticCraftRequesterNode requesterNode = appcompat$getRequesterNode();
         if (requesterNode.attach(world, getPos(), interfaceTile.getMainNode().getNode())) {
+            this.needToCheckForInterface = false;
             if (world.getTotalWorldTime() % 120L == 0L) {
                 requesterNode.refresh();
             }
+        } else {
+            this.needToCheckForInterface = true;
         }
     }
 
@@ -112,9 +128,11 @@ public abstract class MixinSemiBlockRequester extends SemiBlockLogistics impleme
     public void handleGUIButtonPress(final int guiID, final EntityPlayer player) {
         if (guiID == 1) {
             this.aeMode = !this.aeMode;
+            this.needToCheckForInterface = this.aeMode;
             if (!this.aeMode && this.appcompat$requesterNode != null) {
                 this.appcompat$requesterNode.disconnect();
             }
+            this.appcompat$markRequesterDirty();
         }
         super.handleGUIButtonPress(guiID, player);
     }
@@ -125,10 +143,10 @@ public abstract class MixinSemiBlockRequester extends SemiBlockLogistics impleme
      */
     @Overwrite
     public void invalidate() {
-        super.invalidate();
         if (this.appcompat$requesterNode != null) {
             this.appcompat$requesterNode.disconnect();
         }
+        super.invalidate();
     }
 
     /**
@@ -146,8 +164,8 @@ public abstract class MixinSemiBlockRequester extends SemiBlockLogistics impleme
      */
     @Overwrite
     public void notify(final IProvidingInventoryListener.TileEntityAndFace inventory) {
-        if (this.appcompat$requesterNode != null && this.appcompat$requesterNode.isReady()) {
-            this.providingInventories.add(inventory);
+        if (this.aeMode && this.providingInventories.add(inventory)
+            && this.appcompat$requesterNode != null && this.appcompat$requesterNode.isReady()) {
             this.appcompat$requesterNode.refresh();
         }
     }
