@@ -38,18 +38,30 @@ public final class LegacyAeItemMappings {
     private static final String MEKENG = "mekeng";
     private static final String NAE2 = "nae2:";
     public static final SupplierItemStack ERROR = ItemLegacyAeError::create;
-    private static final Map<String, Int2ObjectMap<SupplierItemStack>> MAPPINGS;
-
-    static {
-        final var m = new ImmutableMap.Builder<String, Int2ObjectMap<SupplierItemStack>>();
-        reg(m);
-        MAPPINGS = m.build();
-    }
+    private static volatile Map<String, Int2ObjectMap<SupplierItemStack>> MAPPINGS;
+    private static volatile boolean initialized;
 
     private LegacyAeItemMappings() {
     }
 
+    public static synchronized void init() {
+        if (initialized) {
+            return;
+        }
+
+        final var m = new ImmutableMap.Builder<String, Int2ObjectMap<SupplierItemStack>>();
+        reg(m);
+        MAPPINGS = m.build();
+
+        initialized = true;
+    }
+
+    public static boolean isInitialized() {
+        return initialized;
+    }
+
     public static SupplierItemStack get(final String itemName, final int meta) {
+        requireInitialized();
         final Int2ObjectMap<SupplierItemStack> byMeta = MAPPINGS.get(normalizeItemName(itemName));
         if (byMeta == null) {
             return null;
@@ -58,6 +70,7 @@ public final class LegacyAeItemMappings {
     }
 
     public static ItemStack mappedStackOrNull(final String itemName, final int meta, final int stackSize) {
+        requireInitialized();
         if (stackSize <= 0) {
             throw new IllegalArgumentException("Stack size must be positive");
         }
@@ -75,6 +88,7 @@ public final class LegacyAeItemMappings {
     }
 
     public static ItemStack mappedSpecStackOrNull(final String itemSpec, final int stackSize) {
+        requireInitialized();
         if (itemSpec == null) {
             return null;
         }
@@ -116,6 +130,7 @@ public final class LegacyAeItemMappings {
     }
 
     public static ItemStack stack(final String itemName, final int meta, final int stackSize) {
+        requireInitialized();
         if (stackSize <= 0) {
             throw new IllegalArgumentException("Stack size must be positive");
         }
@@ -870,6 +885,43 @@ public final class LegacyAeItemMappings {
             return itemName;
         }
         return AE + itemName;
+    }
+
+    public static boolean isLegacySpec(final String itemSpec) {
+        if (itemSpec == null) {
+            return false;
+        }
+        String spec = itemSpec.trim();
+        if (spec.startsWith("item:")) {
+            spec = spec.substring("item:".length()).trim();
+        }
+        if (spec.isEmpty() || spec.charAt(0) == '+' || spec.charAt(0) == '-') {
+            return false;
+        }
+        final int comma = spec.indexOf(',');
+        if (comma >= 0) {
+            for (String part : spec.split(",")) {
+                if (isLegacySpec(part)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        final int colon = spec.indexOf(':');
+        if (colon < 0) {
+            return false;
+        }
+        final String namespace = spec.substring(0, colon).toLowerCase(java.util.Locale.ROOT);
+        return namespace.equals(AppliedCompatibility.LEGACY_AE_MOD_ID)
+            || namespace.equals("ae2additions") || namespace.equals("extracells")
+            || namespace.equals("extracpus") || namespace.equals("megacells")
+            || namespace.equals("mekeng") || namespace.equals("nae2");
+    }
+
+    private static void requireInitialized() {
+        if (!initialized || MAPPINGS == null) {
+            throw new IllegalStateException("Legacy AE item mappings have not been initialized");
+        }
     }
 
     @FunctionalInterface

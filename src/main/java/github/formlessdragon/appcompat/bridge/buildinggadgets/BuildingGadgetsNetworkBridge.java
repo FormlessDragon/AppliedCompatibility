@@ -25,6 +25,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -114,7 +115,7 @@ public final class BuildingGadgetsNetworkBridge {
             }
 
             this.extractionKeys = new ObjectArrayList<>();
-            this.extractionAmounts = new LongArrayList<>();
+            this.extractionAmounts = new LongArrayList();
             for (final Object2LongMap.Entry<AEKey> entry : availableStacks) {
                 if (entry.getLongValue() <= 0L || !(entry.getKey() instanceof AEItemKey itemKey)) {
                     continue;
@@ -130,9 +131,10 @@ public final class BuildingGadgetsNetworkBridge {
         }
 
         @Override
+        @NotNull
         public ItemStack getStackInSlot(final int slot) {
             checkSlot(slot);
-            if (this.extractionKeys == null) {
+            if (this.extractionKeys == null || this.extractionAmounts == null) {
                 return ItemStack.EMPTY;
             }
 
@@ -145,6 +147,7 @@ public final class BuildingGadgetsNetworkBridge {
         }
 
         @Override
+        @NotNull
         public ItemStack insertItem(final int slot, final ItemStack stack, final boolean simulate) {
             checkSlot(slot);
             if (stack.isEmpty()) {
@@ -171,9 +174,10 @@ public final class BuildingGadgetsNetworkBridge {
         }
 
         @Override
+        @NotNull
         public ItemStack extractItem(final int slot, final int amount, final boolean simulate) {
             checkSlot(slot);
-            if (amount <= 0 || this.extractionKeys == null) {
+            if (amount <= 0 || this.extractionKeys == null || this.extractionAmounts == null) {
                 return ItemStack.EMPTY;
             }
 
@@ -182,7 +186,7 @@ public final class BuildingGadgetsNetworkBridge {
                 return ItemStack.EMPTY;
             }
 
-            final long requested = Math.min((long) amount, available);
+            final long requested = Math.min(amount, available);
             final long extracted = StorageHelper.poweredExtraction(this.energy, this.storage,
                 this.extractionKeys.get(slot), requested, this.source,
                 simulate ? Actionable.SIMULATE : Actionable.MODULATE);
