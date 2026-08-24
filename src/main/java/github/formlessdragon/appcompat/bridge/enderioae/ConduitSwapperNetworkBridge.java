@@ -96,8 +96,8 @@ public final class ConduitSwapperNetworkBridge {
         tooltip.add(TextFormatting.GREEN + new TextComponentTranslation("appcompat.conduitswapper.tooltip.target",
             boundBlockName(binding)).getFormattedText());
         tooltip.add(TextFormatting.GREEN + new TextComponentTranslation("appcompat.conduitswapper.tooltip.position",
-            binding.getInteger("dimension"), binding.getInteger("x"), binding.getInteger("y"),
-            binding.getInteger("z")).getFormattedText());
+            binding.getInteger("x"), binding.getInteger("y"), binding.getInteger("z"),
+            binding.getInteger("dimension")).getFormattedText());
         return true;
     }
 
