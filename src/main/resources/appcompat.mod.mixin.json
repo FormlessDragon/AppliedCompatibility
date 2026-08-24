@@ -14,6 +14,8 @@
     "ae.MixinTileChargerInventoryFilter",
     "buildinggadgets.MixinAppliedEnergistics2",
     "enderioae.MixinEnderIO",
+    "enderioae.MixinItemConduitSwapper",
+    "enderioae.MixinConduitSwapperWirelessHelper",
     "enderioae.MixinMEConduit",
     "enderioae.MixinMEConduitGrid",
     "enderioae.MixinThings",

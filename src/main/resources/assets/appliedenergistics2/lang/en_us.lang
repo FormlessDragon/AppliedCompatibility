@@ -1,1 +1,10 @@
 item.appliedenergistics2.error_item.name=Error Item
+appcompat.conduitswapper.bind.success=Bound to AE2 network
+appcompat.conduitswapper.bind.unbound=Unbound from AE2 network
+appcompat.conduitswapper.bind.denied=Cannot bind: access denied
+appcompat.conduitswapper.bind.invalid_target=Cannot bind: target has no AE2 network node
+appcompat.conduitswapper.bind.inactive=Cannot bind: AE2 network node is offline
+appcompat.conduitswapper.tooltip.bound=AE2 Network: Bound
+appcompat.conduitswapper.tooltip.unlinked=AE2 Network: Unlinked
+appcompat.conduitswapper.tooltip.target=Target: %s
+appcompat.conduitswapper.tooltip.position=Position: %s, %s, %s, Dimension %s

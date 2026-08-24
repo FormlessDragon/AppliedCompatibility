@@ -1,5 +1,7 @@
 package appeng.core.features.registries;
 
+import ae2.api.storage.StorageCells;
+import ae2.api.storage.cells.StorageCell;
 import appeng.api.features.IChargerRegistry;
 import appeng.api.features.IGrinderRecipe;
 import appeng.api.features.IGrinderRecipeBuilder;
@@ -12,6 +14,7 @@ import appeng.api.features.IPlayerRegistry;
 import appeng.api.features.IRecipeHandlerRegistry;
 import appeng.api.features.IRegistryContainer;
 import appeng.api.features.ISpecialComparisonRegistry;
+import appeng.api.features.IWirelessTermHandler;
 import appeng.api.features.IWirelessTermRegistry;
 import appeng.api.features.IWorldGen;
 import appeng.api.movable.IMovableRegistry;
@@ -29,9 +32,9 @@ import github.formlessdragon.appcompat.AppliedCompatibility;
 import github.formlessdragon.appcompat.bridge.ae.LegacyAeCellInventoryHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.Reference2DoubleOpenHashMap;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -153,17 +156,14 @@ public class RegistryContainer implements IRegistryContainer {
             if (server == null) {
                 throw new IllegalStateException("Cannot resolve AE player without a running MinecraftServer");
             }
-            final EntityPlayerMP player = ae2.api.features.IPlayerRegistry.getConnected(server, playerID);
-            return player;
+            return ae2.api.features.IPlayerRegistry.getConnected(server, playerID);
         }
     }
 
     private static final class CellRegistry implements ICellRegistry {
 
-        private final it.unimi.dsi.fastutil.objects.ObjectArrayList<ICellHandler> handlers =
-            new it.unimi.dsi.fastutil.objects.ObjectArrayList<>();
-        private final it.unimi.dsi.fastutil.objects.ObjectArrayList<ICellGuiHandler> guiHandlers =
-            new it.unimi.dsi.fastutil.objects.ObjectArrayList<>();
+        private final ObjectArrayList<ICellHandler> handlers = new ObjectArrayList<>();
+        private final ObjectArrayList<ICellGuiHandler> guiHandlers = new ObjectArrayList<>();
 
         @Override
         public void addCellHandler(final ICellHandler handler) {
@@ -193,7 +193,7 @@ public class RegistryContainer implements IRegistryContainer {
                     return true;
                 }
             }
-            return ae2.api.storage.StorageCells.isCellHandled(is);
+            return StorageCells.isCellHandled(is);
         }
 
         @Override
@@ -206,7 +206,7 @@ public class RegistryContainer implements IRegistryContainer {
                     return handler;
                 }
             }
-            if (!ae2.api.storage.StorageCells.isCellHandled(is)) {
+            if (!StorageCells.isCellHandled(is)) {
                 return null;
             }
             return NewAeCellHandler.INSTANCE;
@@ -246,8 +246,7 @@ public class RegistryContainer implements IRegistryContainer {
                     }
                 }
             }
-            final ae2.api.storage.cells.StorageCell cell = ae2.api.storage.StorageCells.getCellInventory(is,
-                host == null ? null : host::saveChanges);
+            final StorageCell cell = StorageCells.getCellInventory(is, host == null ? null : host::saveChanges);
             return cell == null ? null : new LegacyAeCellInventoryHandler<>(cell, chan);
         }
     }
@@ -257,7 +256,7 @@ public class RegistryContainer implements IRegistryContainer {
 
         @Override
         public boolean isCell(final ItemStack is) {
-            return is != null && !is.isEmpty() && ae2.api.storage.StorageCells.isCellHandled(is);
+            return is != null && !is.isEmpty() && StorageCells.isCellHandled(is);
         }
 
         @Override
@@ -267,8 +266,7 @@ public class RegistryContainer implements IRegistryContainer {
             if (is == null || is.isEmpty()) {
                 return null;
             }
-            final ae2.api.storage.cells.StorageCell cell = ae2.api.storage.StorageCells.getCellInventory(is,
-                host == null ? null : host::saveChanges);
+            final StorageCell cell = StorageCells.getCellInventory(is, host == null ? null : host::saveChanges);
             return cell == null ? null : new LegacyAeCellInventoryHandler<>(cell, channel);
         }
     }
@@ -534,5 +532,9 @@ public class RegistryContainer implements IRegistryContainer {
         ISpecialComparisonRegistry, IWirelessTermRegistry, IInscriberRegistry,
         ILocatableRegistry, IP2PTunnelRegistry, IMatterCannonAmmoRegistry,
         IRecipeHandlerRegistry, IWorldGen, IPartModels {
+
+        @Override
+        public void registerWirelessHandler(final IWirelessTermHandler handler) {
+        }
     }
 }

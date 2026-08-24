@@ -1,6 +1,9 @@
 package github.formlessdragon.appcompat;
 
+import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.common.Loader;
+
+import java.io.IOException;
 
 public final class AppCompatMixinDecisions {
 
@@ -21,6 +24,10 @@ public final class AppCompatMixinDecisions {
     public static final boolean pneumaticcraftLoaded = Loader.isModLoaded("pneumaticcraft");
     public static final boolean buildingGadgetsLoaded = Loader.isModLoaded("buildinggadgets");
     public static final boolean jeiLoaded = Loader.isModLoaded("jei");
+
+    private static final String CEU_CONDUIT_SWAPPER = "crazypants.enderio.conduits.item.conduitswapper.ItemConduitSwapper";
+    private static final String CEU_WIRELESS_HELPER = "crazypants.enderio.conduits.item.conduitswapper.ConduitSwapperWirelessHelper";
+    public static final boolean enderioCEuConduitSwapperLoaded = hasClassBytes(CEU_CONDUIT_SWAPPER) && hasClassBytes(CEU_WIRELESS_HELPER);
 
     private AppCompatMixinDecisions() {
     }
@@ -48,7 +55,7 @@ public final class AppCompatMixinDecisions {
             case "gtceu" -> enableGTCEu && gtceuLoaded;
             case "packagedauto" -> enablePackagedAuto && packagedautoLoaded && shouldApplyPackage(mixinName);
             case "packagingprovider" -> enablePackagingProvider && packagingproviderLoaded;
-            case "enderioae" -> enableEnderIOAppliedEnergistics && enderioaeLoaded;
+            case "enderioae" -> enableEnderIOAppliedEnergistics && enderioaeLoaded && shouldApplyEnderIOAEMixin(mixinName);
             case "pneumaticcraft" -> enablePneumaticCraft && pneumaticcraftLoaded;
             case "buildinggadgets" -> enableBuildingGadgets && buildingGadgetsLoaded;
             default -> true;
@@ -70,5 +77,21 @@ public final class AppCompatMixinDecisions {
             return jeiLoaded;
         }
         return true;
+    }
+
+    private static boolean shouldApplyEnderIOAEMixin(final String mixinName) {
+        return switch (mixinName) {
+            case "enderioae.MixinItemConduitSwapper", "enderioae.MixinConduitSwapperWirelessHelper" -> enderioCEuConduitSwapperLoaded;
+            default -> true;
+        };
+    }
+
+    private static boolean hasClassBytes(final String className) {
+        try {
+            return Launch.classLoader.getClassBytes(className) != null;
+        } catch (final IOException e) {
+            AppliedCompatibility.LOGGER.error("Failed to inspect EnderIO class {}", className, e);
+            return false;
+        }
     }
 }

@@ -48,6 +48,7 @@ dependencies {
     modImplementation("com.enderio.core:EnderCore:1.12.2-0.5.78:core")
     modImplementation("com.enderio.core:EnderCore:1.12.2-0.5.78")
     modImplementation("com.enderio:EnderIO:1.12.2-5.3.72") {transitive = false}
+    modCompileOnly("curse.maven:enderio-ceu-1530854:8707396") {transitive = false}
 
     //PlusTic
     modCompileOnly("curse.maven:plusticminusbad-376903:4703532")
