@@ -49,7 +49,11 @@ dependencies {
     modImplementation("com.enderio.core:EnderCore:1.12.2-0.5.78")
     modImplementation("com.enderio:EnderIO:1.12.2-5.3.72") {transitive = false}
 
+    //PlusTic
+    modRuntimeOnly "curse.maven:mantle-74924:2713386"
+    modRuntimeOnly "curse.maven:tinkers-construct-74072:2902483"
     modImplementation("curse.maven:plusticminusbad-376903:4703532")
+
     modImplementation("curse.maven:sonar-core-239418:2645156")
     modImplementation("curse.maven:building-gadgets-298187:3005950")
     modImplementation("curse.maven:pneumaticcraft-repressurized-281849:2978408")

@@ -38,9 +38,6 @@ public abstract class MixinSemiBlockRequester extends SemiBlockLogistics impleme
     @Unique
     private PneumaticCraftRequesterNode appcompat$requesterNode;
 
-    @Shadow
-    public abstract TileEntity getTileEntity();
-
     @Invoker("getProvidingItems")
     protected abstract List<IAEItemStack> appcompat$invokeGetProvidingItems();
 

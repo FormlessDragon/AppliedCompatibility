@@ -114,7 +114,7 @@ public final class BuildingGadgetsNetworkBridge {
             }
 
             this.extractionKeys = new ObjectArrayList<>();
-            this.extractionAmounts = new LongArrayList<>();
+            this.extractionAmounts = new LongArrayList();
             for (final Object2LongMap.Entry<AEKey> entry : availableStacks) {
                 if (entry.getLongValue() <= 0L || !(entry.getKey() instanceof AEItemKey itemKey)) {
                     continue;

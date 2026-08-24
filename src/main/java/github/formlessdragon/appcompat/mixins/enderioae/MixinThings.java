@@ -3,6 +3,7 @@ package github.formlessdragon.appcompat.mixins.enderioae;
 import com.enderio.core.common.util.stackable.Things;
 import github.formlessdragon.appcompat.AppCompatConfig;
 import github.formlessdragon.appcompat.bridge.ae.LegacyAeItemMappings;
+import github.formlessdragon.appcompat.bridge.enderioae.EnderIOThingQueue;
 import net.minecraft.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,12 +32,26 @@ public abstract class MixinThings {
         if (trimmed.isEmpty() || trimmed.charAt(0) == '+' || trimmed.charAt(0) == '-') {
             return;
         }
+        if (LegacyAeItemMappings.isInitialized()) {
+            if (LegacyAeItemMappings.isLegacySpec(trimmed)) {
+                Things thisThings = (Things) (Object) this;
+                EnderIOThingQueue.enqueue(thisThings, trimmed);
+                cir.setReturnValue(thisThings);
+            }
+            return;
+        }
+
         if (trimmed.indexOf(',') >= 0) {
             if (appcompat$addCompound(trimmed)) {
                 cir.setReturnValue((Things) (Object) this);
             }
             return;
         }
+
+        if (!LegacyAeItemMappings.isLegacySpec(trimmed)) {
+            return;
+        }
+
         final ItemStack mapped = LegacyAeItemMappings.mappedSpecStackOrNull(trimmed, 1);
         if (mapped == null) {
             return;
