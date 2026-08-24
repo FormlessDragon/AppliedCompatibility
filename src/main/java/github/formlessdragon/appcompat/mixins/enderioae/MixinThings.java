@@ -32,7 +32,7 @@ public abstract class MixinThings {
         if (trimmed.isEmpty() || trimmed.charAt(0) == '+' || trimmed.charAt(0) == '-') {
             return;
         }
-        if (LegacyAeItemMappings.isInitialized()) {
+        if (!LegacyAeItemMappings.isInitialized()) {
             if (LegacyAeItemMappings.isLegacySpec(trimmed)) {
                 Things thisThings = (Things) (Object) this;
                 EnderIOThingQueue.enqueue(thisThings, trimmed);
