@@ -1,1 +1,10 @@
 item.appliedenergistics2.error_item.name=错误物品
+appcompat.conduitswapper.bind.success=已绑定到 AE2 网络
+appcompat.conduitswapper.bind.unbound=已解除 AE2 网络绑定
+appcompat.conduitswapper.bind.denied=无法绑定：没有访问权限
+appcompat.conduitswapper.bind.invalid_target=无法绑定：目标没有 AE2 网络节点
+appcompat.conduitswapper.bind.inactive=无法绑定：AE2 网络节点未就绪
+appcompat.conduitswapper.tooltip.bound=AE2 网络：已绑定
+appcompat.conduitswapper.tooltip.unlinked=AE2 网络：未连接
+appcompat.conduitswapper.tooltip.target=目标：%s
+appcompat.conduitswapper.tooltip.position=位置：%s，%s，%s，维度 %s
