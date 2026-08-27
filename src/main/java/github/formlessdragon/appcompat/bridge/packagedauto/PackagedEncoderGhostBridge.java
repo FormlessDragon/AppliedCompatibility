@@ -7,7 +7,6 @@ import ae2.api.integrations.hei.IngredientConverters;
 import ae2.api.stacks.GenericStack;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mezz.jei.api.gui.IGhostIngredientHandler;
-import mezz.jei.bookmarks.BookmarkItem;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -79,9 +78,6 @@ public final class PackagedEncoderGhostBridge {
     }
 
     public static ItemStack toLeftClickStack(final Object ingredient) {
-        if (ingredient instanceof BookmarkItem<?> bookmarkItem) {
-            return toLeftClickStack(bookmarkItem.ingredient);
-        }
         if (ingredient instanceof ItemStack stack) {
             return stack;
         }
@@ -89,9 +85,6 @@ public final class PackagedEncoderGhostBridge {
     }
 
     public static ItemStack toRightClickStack(final Object ingredient) {
-        if (ingredient instanceof BookmarkItem<?> bookmarkItem) {
-            return toRightClickStack(bookmarkItem.ingredient);
-        }
         if (ingredient instanceof ItemStack stack) {
             final EmptyingAction action = ContainerItemStrategies.getEmptyingAction(stack);
             return action == null ? ItemStack.EMPTY : GenericStack.wrapInItemStack(action.what(), action.maxAmount());
@@ -110,13 +103,6 @@ public final class PackagedEncoderGhostBridge {
     }
 
     private static GenericStack toGenericStack(final Object ingredient) {
-        if (ingredient instanceof BookmarkItem<?> bookmarkItem) {
-            final GenericStack stack = toGenericStack(bookmarkItem.ingredient);
-            if (stack != null && bookmarkItem.amount > 0) {
-                return new GenericStack(stack.what(), bookmarkItem.amount);
-            }
-            return stack;
-        }
         if (ingredient instanceof ItemStack stack) {
             final GenericStack wrapped = GenericStack.unwrapItemStack(stack);
             return wrapped == null ? null : wrapped;

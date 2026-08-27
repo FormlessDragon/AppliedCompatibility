@@ -7,6 +7,9 @@ dependencies {
     }
 
     modRuntimeOnly("curse.maven:fugue-1005815:8230893")
+    modImplementation "curse.maven:scalar-legacy-1235372:6842491"
+    modImplementation("curse.maven:Baubles-227083:2518667")
+    modImplementation("curse.maven:tc6-223628:2629023")
 
     // HEI
     modImplementation "mezz:jei:4.31.2"
@@ -15,9 +18,9 @@ dependencies {
     modImplementation "curse.maven:mouse-tweaks-unofficial-461660:5876158"
 
     //ae2
-    modImplementation("com.github.FormlessDragon:Applied-Energistics-2-Supergiant:v1.0.10:dev")
-
+    modImplementation("com.github.FormlessDragon:Applied-Energistics-2-Supergiant:v1.0.12:dev")
     modImplementation "com.github.FormlessDragon:MEGACells:v1.0.0:dev"
+    modImplementation "com.github.FormlessDragon:ThaumicEnergistics:v2.2.6:dev"
 
     //mekeng
     modImplementation "curse.maven:mekanism-268560:2835175"
@@ -32,7 +35,9 @@ dependencies {
     modCompileOnly("curse.maven:gregtechceu-557242:5519022")
 
     //mmce
-    modRuntimeOnly 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.711'
+    modRuntimeOnly 'CraftTweaker2:CraftTweaker2-API:4.1.20.716'
+    modRuntimeOnly 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.716'
+    modRuntimeOnly 'CraftTweaker2:ZenScript:4.1.20.716'
     modImplementation "curse.maven:the-one-probe-245211:2667280"
     modImplementation "curse.maven:modularmachinery-community-edition-817377:7372951"
     modImplementation("curse.maven:modular-machinery-community-edition-addons-1236022:8175673")
@@ -43,12 +48,8 @@ dependencies {
     modRuntimeOnly "curse.maven:key-binding-patch-928895:5951859"
 
     //EIO
-    modImplementation("info.loenwind.autosave:AutoSave:1.12.2-1.0.11")
-    modImplementation("info.loenwind.autoconfig:AutoConfig:1.12.2-1.0.2")
-    modImplementation("com.enderio.core:EnderCore:1.12.2-0.5.78:core")
-    modImplementation("com.enderio.core:EnderCore:1.12.2-0.5.78")
-    modImplementation("com.enderio:EnderIO:1.12.2-5.3.72") {transitive = false}
-    modCompileOnly("curse.maven:enderio-ceu-1530854:8707396") {transitive = false}
+    modImplementation("curse.maven:ender-core-ceu-1530852:8707400")
+    modImplementation("curse.maven:enderio-ceu-1530854:8707396")
 
     //PlusTic
     modCompileOnly("curse.maven:plusticminusbad-376903:4703532")

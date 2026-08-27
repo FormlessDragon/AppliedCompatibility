@@ -1,5 +1,6 @@
 package github.formlessdragon.appcompat.bridge.ae;
 
+import ae2.api.features.ChargeableItems;
 import ae2.api.movable.BlockEntityMoveStrategies;
 
 public final class AppCompatAEHooks {
@@ -15,5 +16,6 @@ public final class AppCompatAEHooks {
         }
         initialized = true;
         BlockEntityMoveStrategies.add(new LegacyMovableTileMoveStrategy());
+        ChargeableItems.register(LegacyAeItemPowerStorageBridge.INSTANCE);
     }
 }

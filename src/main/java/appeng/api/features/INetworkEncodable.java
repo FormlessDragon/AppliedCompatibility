@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 
 public interface INetworkEncodable {
 
-    String getEncryptionKey(ItemStack item);
+    String getEncryptionKey(ItemStack stack);
 
-    void setEncryptionKey(ItemStack item, String encKey, String name);
+    void setEncryptionKey(ItemStack stack, String encryptionKey, String mode);
 }

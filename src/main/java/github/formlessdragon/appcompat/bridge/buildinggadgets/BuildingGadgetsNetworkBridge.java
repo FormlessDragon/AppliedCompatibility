@@ -13,8 +13,8 @@ import ae2.api.stacks.AEKey;
 import ae2.api.stacks.KeyCounter;
 import ae2.api.storage.MEStorage;
 import ae2.api.storage.StorageHelper;
-import ae2.me.helpers.IGridConnectedTile;
 import ae2.api.util.DimensionalBlockPos;
+import ae2.me.helpers.IGridConnectedTile;
 import ae2.util.Platform;
 import com.direwolf20.buildinggadgets.common.tools.NetworkIO;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
@@ -53,6 +53,9 @@ public final class BuildingGadgetsNetworkBridge {
         }
 
         final IGrid grid = node.grid();
+        if (grid == null) {
+            return null;
+        }
         final IStorageService storageService = grid.getStorageService();
         final IEnergyService energyService = grid.getEnergyService();
         final IActionSource source = host instanceof IActionHost actionHost
@@ -92,6 +95,7 @@ public final class BuildingGadgetsNetworkBridge {
         return fallback;
     }
 
+    @SuppressWarnings("ClassCanBeRecord")
     private static final class NetworkItemHandler implements IItemHandler {
 
         private final MEStorage storage;

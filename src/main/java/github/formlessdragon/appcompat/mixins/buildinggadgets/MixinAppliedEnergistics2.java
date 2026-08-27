@@ -17,20 +17,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinAppliedEnergistics2 {
 
     @Inject(method = "getWrappedNetworkInternal", at = @At("HEAD"), cancellable = true)
-    private void appcompat$useNewAeNetwork(final TileEntity tile, final EntityPlayer player,
+    private void appcompat$useNewAeNetwork(final TileEntity te, final EntityPlayer player,
                                            final NetworkIO.Operation operation,
                                            final CallbackInfoReturnable<IItemHandler> cir) {
         final IInWorldGridNodeHost host;
-        if (tile instanceof IInWorldGridNodeHost directHost) {
+        if (te instanceof IInWorldGridNodeHost directHost) {
             host = directHost;
-        } else if (tile.hasCapability(AECapabilities.IN_WORLD_GRID_NODE_HOST, null)) {
-            host = tile.getCapability(AECapabilities.IN_WORLD_GRID_NODE_HOST, null);
+        } else if (te.hasCapability(AECapabilities.IN_WORLD_GRID_NODE_HOST, null)) {
+            host = te.getCapability(AECapabilities.IN_WORLD_GRID_NODE_HOST, null);
         } else {
             return;
         }
 
         if (host != null) {
-            cir.setReturnValue(BuildingGadgetsNetworkBridge.createHandler(tile, host, player, operation));
+            cir.setReturnValue(BuildingGadgetsNetworkBridge.createHandler(te, host, player, operation));
         }
     }
 }

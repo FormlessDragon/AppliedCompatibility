@@ -11,7 +11,6 @@ import ae2.integration.modules.hei.GenericIngredientHelper;
 import github.formlessdragon.appcompat.common.container.mmce.ContainerMEItemInputBus;
 import github.formlessdragon.appcompat.common.container.mmce.ContainerMEItemInputBus.ItemConfigSlot;
 import github.kasuminova.mmce.common.tile.MEItemInputBus;
-import mezz.jei.bookmarks.BookmarkItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -68,10 +67,6 @@ public class GuiMEItemInputBus extends GuiMEBusBase<ContainerMEItemInputBus> {
     }
 
     public static ItemStack toItemFilterStack(final ItemConfigSlot slot, final Object ingredient) {
-        if (ingredient instanceof BookmarkItem<?> bookmarkItem) {
-            return toItemFilterStack(slot, bookmarkItem.ingredient);
-        }
-
         if (ingredient instanceof ItemStack stack) {
             return toItemFilterStack(slot, stack.copy(), true);
         }

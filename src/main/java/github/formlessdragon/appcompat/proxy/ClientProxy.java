@@ -1,8 +1,6 @@
 package github.formlessdragon.appcompat.proxy;
 
-import github.formlessdragon.appcompat.client.enderioae.ConduitSwapperBindingRenderer;
 import github.formlessdragon.appcompat.bridge.mmce.mekeng.AppCompatMekEngClientInitHooks;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -15,7 +13,6 @@ public class ClientProxy extends CommonProxy {
 
     public void preInit(FMLPreInitializationEvent event) {
         initMekEngClient();
-        initEnderIOAppliedEnergisticsClient();
         super.preInit(event);
     }
 
@@ -30,12 +27,6 @@ public class ClientProxy extends CommonProxy {
     private void initMekEngClient() {
         if (Loader.isModLoaded("mekeng") && Loader.isModLoaded("mekanism")) {
             AppCompatMekEngClientInitHooks.init();
-        }
-    }
-
-    private void initEnderIOAppliedEnergisticsClient() {
-        if (Loader.isModLoaded("enderioconduitsappliedenergistics")) {
-            MinecraftForge.EVENT_BUS.register(ConduitSwapperBindingRenderer.INSTANCE);
         }
     }
 

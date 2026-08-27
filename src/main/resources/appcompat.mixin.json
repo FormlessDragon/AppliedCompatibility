@@ -9,9 +9,6 @@
     "minVersion": "0.5.3"
   },
   "mixins": [
-    "ae.MixinIC2PowerSinkAdapter",
-    "ae.MixinTileCharger",
-    "ae.MixinTileChargerInventoryFilter",
     "buildinggadgets.MixinAppliedEnergistics2",
     "enderioae.MixinEnderIO",
     "enderioae.MixinItemConduitSwapper",

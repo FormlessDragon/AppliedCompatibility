@@ -6,7 +6,7 @@ plugins {
     id 'maven-publish'
     id 'org.jetbrains.gradle.plugin.idea-ext' version '1.4.1'
     id 'com.gradleup.shadow' version '9.4.0'
-    id 'xyz.wagyourtail.unimined' version '1.4.23-kappa'
+    id 'xyz.wagyourtail.unimined' version '1.4.37-kappa'
     id 'com.diffplug.spotless' version '8.4.0'
 }
 
@@ -138,10 +138,10 @@ unimined.minecraft {
         if (propertyBool('use_access_transformer')) {
             accessTransformer "${rootProject.projectDir}/src/main/resources/${propertyString('access_transformer_locations')}"
         }
-        loader "0.5.14-alpha"
+        loader "0.6.10-alpha"
         runs.auth.username = minecraft_username
         runs.all {
-            systemProperty("crl.dev.mixin", "${mod_id}.default.mixin.json,${mod_id}.mod.mixin.json")
+            systemProperty("crl.dev.mixin", "${mod_id}.mixin.json")
             systemProperty("net.minecraftforge.gradle.GradleStart.srg.notch-srg", gtceuMappingsSrg.asFile.absolutePath)
             systemProperty("net.minecraftforge.gradle.GradleStart.csvDir", gtceuMappingsCsvDir.get().asFile.absolutePath)
             def extraArgs = propertyString('extra_jvm_args')
@@ -292,7 +292,7 @@ jar {
         manifest {
             def attribute_map = [:]
             attribute_map['ModType'] = "CRL"
-            attribute_map['MixinConfigs'] = "${mod_id}.default.mixin.json,${mod_id}.mod.mixin.json"
+            attribute_map['MixinConfigs'] = "${mod_id}.mixin.json"
             if (configurations.contain.size() > 0) {
                 attribute_map['ContainedDeps'] = configurations.contain.collect { it.name }.join(' ')
                 attribute_map['NonModDeps'] = true

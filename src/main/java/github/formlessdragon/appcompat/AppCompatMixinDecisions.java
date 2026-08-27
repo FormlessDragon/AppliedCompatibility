@@ -1,39 +1,43 @@
 package github.formlessdragon.appcompat;
 
+import com.cleanroommc.discovery.CleanroomModDiscoverer;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraftforge.fml.common.Loader;
 
 import java.io.IOException;
 
 public final class AppCompatMixinDecisions {
 
     private static boolean enableMMCE = true;
+    private static boolean enableMMCEAddons = true;
     private static boolean enableGTCEu = true;
     private static boolean enablePackagedAuto = true;
     private static boolean enablePackagingProvider = true;
     private static boolean enableEnderIOAppliedEnergistics = true;
     private static boolean enablePneumaticCraft = true;
     private static boolean enableBuildingGadgets = true;
-    public static final boolean mmceLoaded = Loader.isModLoaded("modularmachinery");
-    public static final boolean topLoaded = Loader.isModLoaded("theoneprobe");
-    public static final boolean mekengLoaded = Loader.isModLoaded("mekeng");
-    public static final boolean gtceuLoaded = Loader.isModLoaded("gregtech");
-    public static final boolean packagedautoLoaded = Loader.isModLoaded("packagedauto");
-    public static final boolean packagingproviderLoaded = Loader.isModLoaded("packagingprovider");
-    public static final boolean enderioaeLoaded = Loader.isModLoaded("enderioconduitsappliedenergistics");
-    public static final boolean pneumaticcraftLoaded = Loader.isModLoaded("pneumaticcraft");
-    public static final boolean buildingGadgetsLoaded = Loader.isModLoaded("buildinggadgets");
-    public static final boolean jeiLoaded = Loader.isModLoaded("jei");
+    public static final boolean mmceLoaded = CleanroomModDiscoverer.instance().isModPresent("modularmachinery");
+    public static final boolean mmceaddonsLoaded = CleanroomModDiscoverer.instance().isModPresent("modularmachineryaddons");
+    public static final boolean topLoaded = CleanroomModDiscoverer.instance().isModPresent("theoneprobe");
+    public static final boolean mekengLoaded = CleanroomModDiscoverer.instance().isModPresent("mekeng");
+    public static final boolean gtceuLoaded = CleanroomModDiscoverer.instance().isModPresent("gregtech");
+    public static final boolean packagedautoLoaded = CleanroomModDiscoverer.instance().isModPresent("packagedauto");
+    public static final boolean packagingproviderLoaded = CleanroomModDiscoverer.instance().isModPresent("packagingprovider");
+    public static final boolean enderioaeLoaded = CleanroomModDiscoverer.instance().isModPresent("enderioconduitsappliedenergistics");
+    public static final boolean pneumaticcraftLoaded = CleanroomModDiscoverer.instance().isModPresent("pneumaticcraft");
+    public static final boolean buildingGadgetsLoaded = CleanroomModDiscoverer.instance().isModPresent("buildinggadgets");
+    public static final boolean jeiLoaded = CleanroomModDiscoverer.instance().isModPresent("jei");
 
     private static final String CEU_CONDUIT_SWAPPER = "crazypants.enderio.conduits.item.conduitswapper.ItemConduitSwapper";
     private static final String CEU_WIRELESS_HELPER = "crazypants.enderio.conduits.item.conduitswapper.ConduitSwapperWirelessHelper";
-    public static final boolean enderioCEuConduitSwapperLoaded = hasClassBytes(CEU_CONDUIT_SWAPPER) && hasClassBytes(CEU_WIRELESS_HELPER);
+    public static final boolean enderioCEuConduitSwapperLoaded = hasClassBytes(CEU_CONDUIT_SWAPPER)
+        && hasClassBytes(CEU_WIRELESS_HELPER);
 
     private AppCompatMixinDecisions() {
     }
 
     public static void refreshFromEnvironment() {
         enableMMCE = AppCompatConfig.enableMMCE;
+        enableMMCEAddons = AppCompatConfig.enableMMCEAddons;
         enableGTCEu = AppCompatConfig.enableGTCEu;
         enablePackagedAuto = AppCompatConfig.enablePackagedAuto;
         enablePackagingProvider = AppCompatConfig.enablePackagingProvider;
@@ -52,10 +56,12 @@ public final class AppCompatMixinDecisions {
 
         return switch (group) {
             case "mmce" -> enableMMCE && mmceLoaded && shouldApplyMMCE(mixinName);
+            case "mmceaddons" -> enableMMCEAddons && mmceaddonsLoaded && mmceLoaded;
             case "gtceu" -> enableGTCEu && gtceuLoaded;
             case "packagedauto" -> enablePackagedAuto && packagedautoLoaded && shouldApplyPackage(mixinName);
             case "packagingprovider" -> enablePackagingProvider && packagingproviderLoaded;
-            case "enderioae" -> enableEnderIOAppliedEnergistics && enderioaeLoaded && shouldApplyEnderIOAEMixin(mixinName);
+            case "enderioae" -> enableEnderIOAppliedEnergistics && enderioaeLoaded
+                && shouldApplyEnderIOAEMixin(mixinName);
             case "pneumaticcraft" -> enablePneumaticCraft && pneumaticcraftLoaded;
             case "buildinggadgets" -> enableBuildingGadgets && buildingGadgetsLoaded;
             default -> true;
@@ -81,7 +87,8 @@ public final class AppCompatMixinDecisions {
 
     private static boolean shouldApplyEnderIOAEMixin(final String mixinName) {
         return switch (mixinName) {
-            case "enderioae.MixinItemConduitSwapper", "enderioae.MixinConduitSwapperWirelessHelper" -> enderioCEuConduitSwapperLoaded;
+            case "enderioae.MixinItemConduitSwapper", "enderioae.MixinConduitSwapperWirelessHelper" ->
+                enderioCEuConduitSwapperLoaded;
             default -> true;
         };
     }

@@ -9,7 +9,6 @@ import github.formlessdragon.appcompat.common.container.mmce.ContainerMEFluidInp
 import github.formlessdragon.appcompat.common.container.mmce.ContainerMEFluidInputBus.FluidConfigSlot;
 import github.formlessdragon.appcompat.common.container.mmce.SyncedFluidList;
 import github.kasuminova.mmce.common.tile.MEFluidInputBus;
-import mezz.jei.bookmarks.BookmarkItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -35,9 +34,6 @@ public class GuiMEFluidInputBus extends GuiMEBusBase<ContainerMEFluidInputBus> {
     }
 
     private static boolean isFluidIngredient(final Object ingredient) {
-        if (ingredient instanceof BookmarkItem<?> bookmarkItem) {
-            return isFluidIngredient(bookmarkItem.ingredient);
-        }
         if (ingredient instanceof FluidStack stack) {
             return AEFluidKey.of(stack) != null;
         }

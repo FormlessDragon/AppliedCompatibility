@@ -10,7 +10,6 @@ import github.kasuminova.mmce.common.tile.MEGasInputBus;
 import me.ramidzkh.mekae2.ae2.AEGasKey;
 import mekanism.api.gas.GasStack;
 import mekanism.client.render.MekanismRenderer;
-import mezz.jei.bookmarks.BookmarkItem;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -38,9 +37,6 @@ public class GuiMEGasInputBus extends GuiMEBusBase<ContainerMEGasInputBus> {
     }
 
     private static boolean isGasIngredient(final Object ingredient) {
-        if (ingredient instanceof BookmarkItem<?> bookmarkItem) {
-            return isGasIngredient(bookmarkItem.ingredient);
-        }
         if (ingredient instanceof GasStack stack) {
             return AEGasKey.of(stack) != null;
         }

@@ -2,11 +2,13 @@ package github.formlessdragon.appcompat.mixins.enderioae;
 
 import crazypants.enderio.base.conduit.IConduit;
 import crazypants.enderio.conduits.item.conduitswapper.ConduitSwapperWirelessHelper;
+import crazypants.enderio.conduits.init.ConduitObject;
 import crazypants.enderio.conduits.item.conduitswapper.ItemConduitSwapper;
 import github.formlessdragon.appcompat.bridge.enderioae.ConduitSwapperNetworkBridge;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -14,8 +16,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.BiConsumer;
 
-@Mixin(value = ConduitSwapperWirelessHelper.class, remap = false)
+@Pseudo
+@Mixin(targets = "crazypants.enderio.conduits.item.conduitswapper.ConduitSwapperWirelessHelper", remap = false)
 public abstract class MixinConduitSwapperWirelessHelper {
+
+    @Inject(method = "registerWirelessHandler", at = @At("HEAD"), cancellable = true)
+    private static void appcompat$registerGridLinkable(final CallbackInfo ci) {
+        ConduitSwapperNetworkBridge.registerGridLinkable(ConduitObject.item_conduit_swapper.getItemNN());
+        ci.cancel();
+    }
 
     @Inject(method = "hasAccess", at = @At("HEAD"), cancellable = true)
     private static void appcompat$hasAccess(final ItemConduitSwapper handler, final EntityPlayer player,
