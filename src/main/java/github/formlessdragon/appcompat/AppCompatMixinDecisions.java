@@ -29,8 +29,6 @@ public final class AppCompatMixinDecisions {
 
     private static final String CEU_CONDUIT_SWAPPER = "crazypants.enderio.conduits.item.conduitswapper.ItemConduitSwapper";
     private static final String CEU_WIRELESS_HELPER = "crazypants.enderio.conduits.item.conduitswapper.ConduitSwapperWirelessHelper";
-    public static final boolean enderioCEuConduitSwapperLoaded = hasClassBytes(CEU_CONDUIT_SWAPPER)
-        && hasClassBytes(CEU_WIRELESS_HELPER);
 
     private AppCompatMixinDecisions() {
     }
@@ -88,7 +86,8 @@ public final class AppCompatMixinDecisions {
     private static boolean shouldApplyEnderIOAEMixin(final String mixinName) {
         return switch (mixinName) {
             case "enderioae.MixinItemConduitSwapper", "enderioae.MixinConduitSwapperWirelessHelper" ->
-                enderioCEuConduitSwapperLoaded;
+                enderioaeLoaded && hasClassBytes(CEU_CONDUIT_SWAPPER)
+                    && hasClassBytes(CEU_WIRELESS_HELPER);
             default -> true;
         };
     }
