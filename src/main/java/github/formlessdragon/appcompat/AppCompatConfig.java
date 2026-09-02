@@ -22,4 +22,6 @@ public final class AppCompatConfig {
     public static boolean enableBuildingGadgets = true;
 
     public static boolean enableLegacyAeItemIdRemapping = true;
+
+    public static boolean enableCrT = true;
 }

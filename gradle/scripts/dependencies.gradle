@@ -35,8 +35,8 @@ dependencies {
     modCompileOnly("curse.maven:gregtechceu-557242:5519022")
 
     //mmce
-    modRuntimeOnly 'CraftTweaker2:CraftTweaker2-API:4.1.20.716'
-    modRuntimeOnly 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.716'
+    modImplementation 'CraftTweaker2:CraftTweaker2-API:4.1.20.716'
+    modImplementation 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.716'
     modRuntimeOnly 'CraftTweaker2:ZenScript:4.1.20.716'
     modImplementation "curse.maven:the-one-probe-245211:2667280"
     modImplementation "curse.maven:modularmachinery-community-edition-817377:7372951"

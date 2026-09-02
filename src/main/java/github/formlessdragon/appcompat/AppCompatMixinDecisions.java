@@ -15,6 +15,7 @@ public final class AppCompatMixinDecisions {
     private static boolean enableEnderIOAppliedEnergistics = true;
     private static boolean enablePneumaticCraft = true;
     private static boolean enableBuildingGadgets = true;
+    private static boolean enableCrT = true;
     public static final boolean mmceLoaded = CleanroomModDiscoverer.instance().isModPresent("modularmachinery");
     public static final boolean mmceaddonsLoaded = CleanroomModDiscoverer.instance().isModPresent("modularmachineryaddons");
     public static final boolean topLoaded = CleanroomModDiscoverer.instance().isModPresent("theoneprobe");
@@ -26,6 +27,7 @@ public final class AppCompatMixinDecisions {
     public static final boolean pneumaticcraftLoaded = CleanroomModDiscoverer.instance().isModPresent("pneumaticcraft");
     public static final boolean buildingGadgetsLoaded = CleanroomModDiscoverer.instance().isModPresent("buildinggadgets");
     public static final boolean jeiLoaded = CleanroomModDiscoverer.instance().isModPresent("jei");
+    public static final boolean crTLoaded = CleanroomModDiscoverer.instance().isModPresent("crafttweaker");
 
     private static final String CEU_CONDUIT_SWAPPER = "crazypants.enderio.conduits.item.conduitswapper.ItemConduitSwapper";
     private static final String CEU_WIRELESS_HELPER = "crazypants.enderio.conduits.item.conduitswapper.ConduitSwapperWirelessHelper";
@@ -42,6 +44,7 @@ public final class AppCompatMixinDecisions {
         enableEnderIOAppliedEnergistics = AppCompatConfig.enableEnderIOAppliedEnergistics;
         enablePneumaticCraft = AppCompatConfig.enablePneumaticCraft;
         enableBuildingGadgets = AppCompatConfig.enableBuildingGadgets;
+        enableCrT = AppCompatConfig.enableCrT;
     }
 
     public static boolean shouldApply(final String mixinName) {
@@ -62,6 +65,7 @@ public final class AppCompatMixinDecisions {
                 && shouldApplyEnderIOAEMixin(mixinName);
             case "pneumaticcraft" -> enablePneumaticCraft && pneumaticcraftLoaded;
             case "buildinggadgets" -> enableBuildingGadgets && buildingGadgetsLoaded;
+            case "crt" -> enableCrT && crTLoaded;
             default -> true;
         };
     }

@@ -12,7 +12,6 @@ import mekanism.api.gas.GasStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.io.IOException;
 
 public final class AEGasStack implements IAEGasStack, Comparable<AEGasStack> {
 

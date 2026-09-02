@@ -9,7 +9,6 @@ import mekanism.api.gas.GasStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.io.IOException;
 
 public interface IAEGasStack extends IAEStack<IAEGasStack> {
 

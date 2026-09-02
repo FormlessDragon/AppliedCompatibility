@@ -1,7 +1,6 @@
 package github.formlessdragon.appcompat.mixins.enderioae;
 
 import crazypants.enderio.base.conduit.IConduit;
-import crazypants.enderio.conduits.item.conduitswapper.ConduitSwapperWirelessHelper;
 import crazypants.enderio.conduits.init.ConduitObject;
 import crazypants.enderio.conduits.item.conduitswapper.ItemConduitSwapper;
 import github.formlessdragon.appcompat.bridge.enderioae.ConduitSwapperNetworkBridge;
