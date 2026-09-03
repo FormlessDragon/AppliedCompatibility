@@ -10,6 +10,7 @@
   },
   "mixins": [
     "buildinggadgets.MixinAppliedEnergistics2",
+    "crt.MixinBracketHandlerItem",
     "enderioae.MixinEnderIO",
     "enderioae.MixinItemConduitSwapper",
     "enderioae.MixinConduitSwapperWirelessHelper",

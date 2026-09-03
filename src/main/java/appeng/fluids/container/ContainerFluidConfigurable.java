@@ -4,7 +4,6 @@ import appeng.api.implementations.IUpgradeableHost;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.container.implementations.ContainerUpgradeable;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IContainerListener;
 
 import java.util.Map;
 

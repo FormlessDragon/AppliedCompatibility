@@ -6,7 +6,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.io.IOException;
 
 public interface IAEStack<T extends IAEStack<T>> {
 
