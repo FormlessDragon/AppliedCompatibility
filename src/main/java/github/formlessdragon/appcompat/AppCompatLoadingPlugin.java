@@ -8,7 +8,7 @@ import java.util.Map;
 public class AppCompatLoadingPlugin implements IFMLLoadingPlugin {
     @Override
     public @Nullable String[] getASMTransformerClass() {
-        return null;
+        return new String[]{"github.formlessdragon.appcompat.transformers.JechCallHookTransformer"};
     }
 
     @Override

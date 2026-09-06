@@ -40,7 +40,8 @@
     "packagedauto.MixinTilePackagerExtension",
     "packagedauto.MixinTileUnpackager",
     "pneumaticcraft.MixinSemiBlockRequester",
-    "packagingprovider.MixinTilePackagingProvider"
+    "packagingprovider.MixinTilePackagingProvider",
+    "recipehandler.MixinProxy"
   ],
   "client": [
     "mmce.MixinClientProxy",

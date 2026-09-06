@@ -22,6 +22,9 @@ dependencies {
     modImplementation "com.github.FormlessDragon:MEGACells:v1.0.0:dev"
     modImplementation "com.github.FormlessDragon:ThaumicEnergistics:v2.2.6:dev"
 
+    modImplementation('curse.maven:just-enough-characters-250702:4402463')
+    modImplementation('curse.maven:NoMoreRecipeConflict-238123:2671230')
+
     //mekeng
     modImplementation "curse.maven:mekanism-268560:2835175"
     modImplementation "com.github.FormlessDragon:Applied-Mekanistics:v1.1.0:dev"

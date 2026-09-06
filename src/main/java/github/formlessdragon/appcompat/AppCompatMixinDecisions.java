@@ -28,6 +28,7 @@ public final class AppCompatMixinDecisions {
     public static final boolean buildingGadgetsLoaded = CleanroomModDiscoverer.instance().isModPresent("buildinggadgets");
     public static final boolean jeiLoaded = CleanroomModDiscoverer.instance().isModPresent("jei");
     public static final boolean crTLoaded = CleanroomModDiscoverer.instance().isModPresent("crafttweaker");
+    public static final boolean recipehandlerLoaded = CleanroomModDiscoverer.instance().isModPresent("recipehandler");
 
     private static final String CEU_CONDUIT_SWAPPER = "crazypants.enderio.conduits.item.conduitswapper.ItemConduitSwapper";
     private static final String CEU_WIRELESS_HELPER = "crazypants.enderio.conduits.item.conduitswapper.ConduitSwapperWirelessHelper";
@@ -66,6 +67,7 @@ public final class AppCompatMixinDecisions {
             case "pneumaticcraft" -> enablePneumaticCraft && pneumaticcraftLoaded;
             case "buildinggadgets" -> enableBuildingGadgets && buildingGadgetsLoaded;
             case "crt" -> enableCrT && crTLoaded;
+            case "recipehandler" -> recipehandlerLoaded;
             default -> true;
         };
     }
