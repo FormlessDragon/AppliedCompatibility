@@ -11,7 +11,13 @@ public final class JechSearchCompatibility {
         "ae2.client.gui.me.search.ModSearchPredicate:test",
         "ae2.client.gui.me.search.ItemIdSearchPredicate:test",
         "ae2.client.gui.me.search.TooltipsSearchPredicate:test",
-        "ae2.client.gui.me.search.OreDictSearchPredicate:matchesTerm"
+        "ae2.client.gui.me.search.OreDictSearchPredicate:matchesTerm",
+        "ae2.client.gui.widgets.CPUSelectionList$ViewState:lambda$compute$0",
+        "ae2.client.gui.me.patternaccess.PatternAccessDisplaySupport:matchesSearch",
+        "ae2.client.gui.me.patternaccess.PatternAccessDisplaySupport:stackMatchesInputFilter",
+        "ae2.client.gui.me.patternaccess.PatternAccessDisplaySupport:stackMatchesOutputFilter",
+        "ae2.items.tools.advancedmemorycard.AdvancedMemoryCardFilterLogic:matchesSearch",
+        "ae2.container.implementations.ContainerProviderSelect:rebuildFilteredEntries"
     };
 
     private JechSearchCompatibility() {
