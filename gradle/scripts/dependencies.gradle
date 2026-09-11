@@ -18,7 +18,7 @@ dependencies {
     modImplementation "curse.maven:mouse-tweaks-unofficial-461660:5876158"
 
     //ae2
-    modImplementation("com.github.FormlessDragon:Applied-Energistics-2-Supergiant:v1.0.12:dev")
+    modImplementation("com.github.FormlessDragon:Applied-Energistics-2-Supergiant:v1.0.13:dev")
     modImplementation "com.github.FormlessDragon:MEGACells:v1.0.0:dev"
     modImplementation "com.github.FormlessDragon:ThaumicEnergistics:v2.2.6:dev"
 

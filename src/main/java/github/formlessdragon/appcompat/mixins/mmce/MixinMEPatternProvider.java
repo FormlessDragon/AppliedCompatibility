@@ -23,6 +23,7 @@ import ae2.text.TextComponentItemStack;
 import ae2.util.inv.SupplierInternalInventory;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.tile.inventory.AppEngInternalInventory;
+import appeng.util.Platform;
 import appeng.util.inv.InvOperation;
 import github.formlessdragon.appcompat.bridge.mmce.PatternProviderCacheExtensions;
 import github.kasuminova.mmce.common.tile.MEPatternProvider;
@@ -347,7 +348,7 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
         appcompat$requestPatternUpdate();
         final var world = getWorld();
         if (world != null) {
-            appeng.util.Platform.notifyBlocksOfNeighbors(world, getPos());
+            Platform.notifyBlocksOfNeighbors(world, getPos());
         }
     }
 
