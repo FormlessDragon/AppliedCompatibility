@@ -4,6 +4,7 @@ plugins {
     id 'java'
     id 'java-library'
     id 'maven-publish'
+    id 'scala'
     id 'org.jetbrains.gradle.plugin.idea-ext' version '1.4.1'
     id 'com.gradleup.shadow' version '9.4.0'
     id 'xyz.wagyourtail.unimined' version '1.4.37-kappa'
@@ -75,6 +76,10 @@ java {
     if (propertyBool('generate_javadocs_jar')) {
         withJavadocJar()
     }
+}
+
+scala {
+    scalaVersion = '2.11.1'
 }
 
 configurations {
