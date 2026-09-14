@@ -4,22 +4,24 @@
   "package": "github.formlessdragon.appcompat.mixins",
   "compatibilityLevel": "JAVA_25",
   "plugin": "github.formlessdragon.appcompat.MixinConfigPlugin",
-  "target": "@env(MOD)",
+  "target": "@env(DEFAULT)",
   "mixinextras": {
     "minVersion": "0.5.3"
   },
   "mixins": [
     "buildinggadgets.MixinAppliedEnergistics2",
     "crt.MixinBracketHandlerItem",
+    "enderioae.MixinConduitSwapperWirelessHelper",
     "enderioae.MixinEnderIO",
     "enderioae.MixinItemConduitSwapper",
-    "enderioae.MixinConduitSwapperWirelessHelper",
     "enderioae.MixinMEConduit",
     "enderioae.MixinMEConduitGrid",
     "enderioae.MixinThings",
     "enderioae.MixinTileConduitBundle",
     "gtceu.MixinMetaTileEntityHolder",
     "gtceu.MixinMods",
+    "mc.MixinCraftingHelper",
+    "mc.MixinGameRegistry",
     "mmce.MixinCommonProxy",
     "mmce.MixinItemBlockMEMachineComponent",
     "mmce.MixinMEFluidInputBus",
@@ -39,8 +41,8 @@
     "packagedauto.MixinTilePackager",
     "packagedauto.MixinTilePackagerExtension",
     "packagedauto.MixinTileUnpackager",
-    "pneumaticcraft.MixinSemiBlockRequester",
     "packagingprovider.MixinTilePackagingProvider",
+    "pneumaticcraft.MixinSemiBlockRequester",
     "recipehandler.MixinProxy"
   ],
   "client": [
