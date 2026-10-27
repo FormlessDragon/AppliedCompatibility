@@ -16,6 +16,7 @@ public final class AppCompatMixinDecisions {
     private static boolean enablePneumaticCraft = true;
     private static boolean enableBuildingGadgets = true;
     private static boolean enableCrT = true;
+    public static final boolean moreMekaSuitModulesLoaded = CleanroomModDiscoverer.instance().isModPresent("moremekasuitmodules");
     public static final boolean mmceLoaded = CleanroomModDiscoverer.instance().isModPresent("modularmachinery");
     public static final boolean mmceaddonsLoaded = CleanroomModDiscoverer.instance().isModPresent("modularmachineryaddons");
     public static final boolean topLoaded = CleanroomModDiscoverer.instance().isModPresent("theoneprobe");
@@ -68,6 +69,7 @@ public final class AppCompatMixinDecisions {
             case "buildinggadgets" -> enableBuildingGadgets && buildingGadgetsLoaded;
             case "crt" -> enableCrT && crTLoaded;
             case "recipehandler" -> recipehandlerLoaded;
+            case "moremekasuitmodules" -> moreMekaSuitModulesLoaded;
             default -> true;
         };
     }

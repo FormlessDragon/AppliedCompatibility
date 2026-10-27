@@ -2,10 +2,19 @@ package github.formlessdragon.appcompat;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.jetbrains.annotations.Nullable;
+import zone.rong.mixinbooter.IMixinConfigHijacker;
+import it.unimi.dsi.fastutil.objects.ObjectSets;
 
 import java.util.Map;
+import java.util.Set;
 
-public class AppCompatLoadingPlugin implements IFMLLoadingPlugin {
+public class AppCompatLoadingPlugin implements IFMLLoadingPlugin, IMixinConfigHijacker {
+
+    @Override
+    public Set<String> getHijackedMixinConfigs() {
+        return ObjectSets.singleton("mixins.moremekasuitmodules_appliedenergistics2.json");
+    }
+
     @Override
     public @Nullable String[] getASMTransformerClass() {
         return new String[]{"github.formlessdragon.appcompat.transformers.JechCallHookTransformer"};

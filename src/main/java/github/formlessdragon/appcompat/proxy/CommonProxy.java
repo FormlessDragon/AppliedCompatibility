@@ -6,12 +6,14 @@ import github.formlessdragon.appcompat.bridge.ae.LegacyAeItemMappings;
 import github.formlessdragon.appcompat.bridge.enderioae.EnderIOThingQueue;
 import github.formlessdragon.appcompat.bridge.mmce.AppCompatMMCEHooks;
 import github.formlessdragon.appcompat.bridge.mmce.mekeng.AppCompatMekEngInitHooks;
+import github.formlessdragon.appcompat.bridge.moremekasuitmodules.MekaSuitWirelessBridge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import static github.formlessdragon.appcompat.AppCompatMixinDecisions.mekengLoaded;
 import static github.formlessdragon.appcompat.AppCompatMixinDecisions.mmceLoaded;
+import static github.formlessdragon.appcompat.AppCompatMixinDecisions.moreMekaSuitModulesLoaded;
 
 public class CommonProxy {
 
@@ -31,7 +33,9 @@ public class CommonProxy {
     }
 
     public void postInit(FMLPostInitializationEvent event) {
-
+        if (moreMekaSuitModulesLoaded) {
+            MekaSuitWirelessBridge.init();
+        }
     }
 
 }

@@ -34,6 +34,8 @@
     "mmce.mekeng.MixinMEGasInputBus",
     "mmce.mekeng.MixinMEGasOutputBus",
     "mmce.top.MixinMachineryHatchInfoProvider",
+    "moremekasuitmodules.MixinAEGuiHandler",
+    "moremekasuitmodules.MixinItemMekaSuitHelmet",
     "packagedauto.MixinTileBase",
     "packagedauto.MixinTileCrafter",
     "packagedauto.MixinTileCraftingProxy",
@@ -46,6 +48,7 @@
     "recipehandler.MixinProxy"
   ],
   "client": [
+    "moremekasuitmodules.MixinAEGuiHandlerClient",
     "mmce.MixinClientProxy",
     "mmce.mekeng.MixinClientProxy",
     "packagedauto.MixinGuiAmountSpecifying",

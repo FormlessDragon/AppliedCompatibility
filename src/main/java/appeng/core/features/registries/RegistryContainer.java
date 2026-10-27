@@ -14,7 +14,6 @@ import appeng.api.features.IPlayerRegistry;
 import appeng.api.features.IRecipeHandlerRegistry;
 import appeng.api.features.IRegistryContainer;
 import appeng.api.features.ISpecialComparisonRegistry;
-import appeng.api.features.IWirelessTermHandler;
 import appeng.api.features.IWirelessTermRegistry;
 import appeng.api.features.IWorldGen;
 import appeng.api.movable.IMovableRegistry;
@@ -51,6 +50,7 @@ public class RegistryContainer implements IRegistryContainer {
     private final ICellRegistry cell = new CellRegistry();
     private final IGrinderRegistry grinder = new GrinderRegistry();
     private final IChargerRegistry charger = new ChargerRegistry();
+    private final IWirelessTermRegistry wireless = new WirelessRegistry();
     private final UnsupportedRegistries unsupported = new UnsupportedRegistries();
 
     @Override
@@ -70,7 +70,7 @@ public class RegistryContainer implements IRegistryContainer {
 
     @Override
     public IWirelessTermRegistry wireless() {
-        return this.unsupported;
+        return this.wireless;
     }
 
     @Override
@@ -529,12 +529,8 @@ public class RegistryContainer implements IRegistryContainer {
     }
 
     private static final class UnsupportedRegistries implements IMovableRegistry, IGridCacheRegistry,
-        ISpecialComparisonRegistry, IWirelessTermRegistry, IInscriberRegistry,
+        ISpecialComparisonRegistry, IInscriberRegistry,
         ILocatableRegistry, IP2PTunnelRegistry, IMatterCannonAmmoRegistry,
         IRecipeHandlerRegistry, IWorldGen, IPartModels {
-
-        @Override
-        public void registerWirelessHandler(final IWirelessTermHandler handler) {
-        }
     }
 }

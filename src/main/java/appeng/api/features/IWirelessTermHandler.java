@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
-public interface IWirelessTermHandler {
+public interface IWirelessTermHandler extends INetworkEncodable {
 
     boolean canHandle(ItemStack is);
 

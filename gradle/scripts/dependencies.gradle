@@ -12,13 +12,13 @@ dependencies {
     modImplementation("curse.maven:tc6-223628:2629023")
 
     // HEI
-    modImplementation "mezz:jei:4.31.2"
+    modImplementation "mezz:jei:4.35.1"
 
     // mouse tweaks
     modImplementation "curse.maven:mouse-tweaks-unofficial-461660:5876158"
 
     //ae2
-    modImplementation("com.github.FormlessDragon:Applied-Energistics-2-Supergiant:v1.0.15:dev")
+    modImplementation("com.github.FormlessDragon:Applied-Energistics-2-Supergiant:v1.0.17:dev")
     modImplementation "com.github.FormlessDragon:MEGACells:v1.0.0:dev"
     modImplementation "com.github.FormlessDragon:ThaumicEnergistics:v2.2.7:dev"
 
@@ -27,6 +27,8 @@ dependencies {
 
     //mekeng
     modImplementation "curse.maven:mekanism-268560:2835175"
+    modCompileOnly "curse.maven:mekanism-ce-unofficial-840735:7163564"
+    modCompileOnly "curse.maven:moremekasuitmodules-1205682:6550164"
     modImplementation "com.github.FormlessDragon:Applied-Mekanistics:v1.1.0:dev"
 
     //packagedauto
