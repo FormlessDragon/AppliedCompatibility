@@ -12,11 +12,12 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridVisitor;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.IReadOnlyCollection;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
@@ -80,7 +81,7 @@ public final class EnderIOLegacyGridNode implements IGridNode {
         final ae2.api.networking.IGridNode node = this.managedNode.getNode();
         final EnumSet<AEPartLocation> sides = EnumSet.noneOf(AEPartLocation.class);
         if (node != null) {
-            for (final net.minecraft.util.EnumFacing side : node.getConnectedSides()) {
+            for (final EnumFacing side : node.getConnectedSides()) {
                 sides.add(AEPartLocation.fromFacing(side));
             }
         }
@@ -93,7 +94,7 @@ public final class EnderIOLegacyGridNode implements IGridNode {
         if (node == null) {
             return new EnderIOReadOnlyCollection<>(Collections.emptyList());
         }
-        final List<IGridConnection> connections = new ArrayList<>(node.getConnections().size());
+        final List<IGridConnection> connections = new ObjectArrayList<>(node.getConnections().size());
         for (final ae2.api.networking.IGridConnection connection : node.getConnections()) {
             connections.add(new EnderIOLegacyGridConnection(connection, node, this));
         }

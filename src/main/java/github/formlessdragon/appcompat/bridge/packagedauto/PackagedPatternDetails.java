@@ -12,6 +12,7 @@ import thelm.packagedauto.api.IPackageItem;
 import thelm.packagedauto.api.IPackagePattern;
 import thelm.packagedauto.api.IRecipeInfo;
 
+import java.util.Collections;
 import java.util.List;
 
 public final class PackagedPatternDetails implements IPatternDetails {
@@ -32,8 +33,9 @@ public final class PackagedPatternDetails implements IPatternDetails {
         this.kind = kind;
         this.packagePattern = packagePattern;
         this.recipe = recipe;
-        this.definition = AEItemKey.of(definition);
-        this.outputs = outputs;
+        this.definition = AEItemKey.of(kind.encodeDefinition(definition));
+        // Every factory transfers ownership of its freshly built output list.
+        this.outputs = Collections.unmodifiableList(outputs);
         this.inputSlots = new IInput[inputs.size()];
         for (int i = 0; i < inputs.size(); i++) {
             this.inputSlots[i] = new Input(inputs.get(i));
@@ -120,6 +122,16 @@ public final class PackagedPatternDetails implements IPatternDetails {
     @Override
     public List<GenericStack> getOutputs() {
         return this.outputs;
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+        return other instanceof PackagedPatternDetails pattern && this.definition.equals(pattern.definition);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.definition.hashCode();
     }
 
     private record Input(GenericStack stack, GenericStack[] possibleInputs) implements IInput {

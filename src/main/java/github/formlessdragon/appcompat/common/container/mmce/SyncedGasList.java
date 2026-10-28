@@ -4,11 +4,11 @@ import ae2.api.stacks.GenericStack;
 import ae2.container.guisync.PacketWritable;
 import com.mekeng.github.common.me.inventory.impl.GasInventory;
 import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.ramidzkh.mekae2.ae2.AEGasKey;
 import mekanism.api.gas.GasStack;
 import net.minecraft.network.PacketBuffer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SyncedGasList implements PacketWritable {
@@ -22,14 +22,14 @@ public class SyncedGasList implements PacketWritable {
     public SyncedGasList(final ByteBuf data) {
         final PacketBuffer buffer = new PacketBuffer(data);
         final int size = buffer.readVarInt();
-        this.stacks = new ArrayList<>(size);
+        this.stacks = new ObjectArrayList<>(size);
         for (int i = 0; i < size; i++) {
             this.stacks.add(GenericStack.readBuffer(buffer));
         }
     }
 
     public static SyncedGasList from(final GasInventory inventory) {
-        final List<GenericStack> list = new ArrayList<>();
+        final List<GenericStack> list = new ObjectArrayList<>();
         if (inventory != null) {
             for (int i = 0; i < inventory.size(); i++) {
                 final GasStack gas = inventory.getGasStack(i);

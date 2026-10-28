@@ -29,11 +29,10 @@ public final class Materials {
     }
 
     public Optional<MaterialType> getById(final int itemDamage) {
-        final MaterialType[] values = MaterialType.values();
-        if (itemDamage < 0 || itemDamage >= values.length) {
+        if (itemDamage < 0 || itemDamage >= MaterialType.VALUES.length) {
             return Optional.empty();
         }
-        return Optional.of(values[itemDamage]);
+        return Optional.of(MaterialType.VALUES[itemDamage]);
     }
 
     public IItemDefinition cellPartVoid() { return this.cellPartVoid; }
@@ -70,6 +69,8 @@ public final class Materials {
         CELL_GAS_PART_1024K("cell_part_gas_1024k"),
         CELL_GAS_PART_4096K("cell_part_gas_4096k"),
         CELL_GAS_PART_16384K("cell_part_gas_16384k");
+
+        public static final MaterialType[] VALUES = values();
 
         private final String id;
 

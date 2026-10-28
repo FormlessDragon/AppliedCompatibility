@@ -33,6 +33,8 @@ public enum PartEnum {
     GASMONITOR("gas.monitor", Integration.Mods.MEKANISMGAS),
     GASCONVERSIONMONITOR("gas.conversion.monitor", Integration.Mods.MEKANISMGAS);
 
+    private static final PartEnum[] VALUES = values();
+
     private final String name;
     private final String groupName;
     private final Integration.Mods mod;
@@ -61,9 +63,8 @@ public enum PartEnum {
     }
 
     public static ItemStack getPartByName(final String name) {
-        final PartEnum[] values = values();
-        for (int i = 0; i < values.length; i++) {
-            if (values[i].name.equals(name)) {
+        for (int i = 0; i < VALUES.length; i++) {
+            if (VALUES[i].name.equals(name)) {
                 return ItemEnum.PARTITEM.getDamagedStack(i);
             }
         }

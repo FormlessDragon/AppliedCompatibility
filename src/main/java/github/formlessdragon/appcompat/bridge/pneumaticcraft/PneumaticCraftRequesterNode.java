@@ -14,10 +14,10 @@ import ae2.api.networking.storage.IStorageWatcherNode;
 import ae2.api.stacks.AEItemKey;
 import ae2.api.stacks.AEKey;
 import ae2.api.stacks.KeyCounter;
+import appeng.api.storage.data.IAEItemStack;
 import github.formlessdragon.appcompat.bridge.ae.LegacyAeStorageBridge;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
 import it.unimi.dsi.fastutil.objects.ObjectSets;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -33,19 +33,13 @@ import java.util.Set;
 public final class PneumaticCraftRequesterNode implements ICraftingProvider {
 
     private static final IGridNodeListener<PneumaticCraftRequesterNode> NODE_LISTENER =
-        new IGridNodeListener<>() {
-            @Override
-            public void onSaveChanges(final PneumaticCraftRequesterNode owner, final IGridNode ignored) {
-                owner.access.appcompat$markRequesterDirty();
-            }
-        };
+        (owner, ignored) -> owner.access.appcompat$markRequesterDirty();
 
     private final PneumaticCraftRequesterAccess access;
     private final PneumaticCraftRequesterWatcher craftingWatcher;
     private final PneumaticCraftRequesterWatcher storageWatcher;
-    private final ObjectOpenHashSet<AEKey> emitableItems = new ObjectOpenHashSet<>();
     private final ObjectOpenHashSet<AEKey> collectedEmitableItems = new ObjectOpenHashSet<>();
-    private final ObjectSet<AEKey> exposedEmitableItems = ObjectSets.unmodifiable(this.emitableItems);
+    private Set<AEKey> exposedEmitableItems = ObjectSets.emptySet();
     private IManagedGridNode managedNode;
     private IGridConnection connection;
     private boolean emitableItemsInitialized;
@@ -169,8 +163,11 @@ public final class PneumaticCraftRequesterNode implements ICraftingProvider {
 
     private boolean updateEmitableItems() {
         this.collectedEmitableItems.clear();
-        for (final appeng.api.storage.data.IAEItemStack stack : this.access.appcompat$getProvidingItems()) {
-            this.collectedEmitableItems.add(LegacyAeStorageBridge.toKey(stack));
+        for (final IAEItemStack stack : this.access.appcompat$getProvidingItems()) {
+            final AEKey key = LegacyAeStorageBridge.toKey(stack);
+            if (key != null) {
+                this.collectedEmitableItems.add(key);
+            }
         }
         final IItemHandlerModifiable filters = this.access.appcompat$getFilters();
         for (int slot = 0; slot < filters.getSlots(); slot++) {
@@ -179,11 +176,10 @@ public final class PneumaticCraftRequesterNode implements ICraftingProvider {
                 this.collectedEmitableItems.add(key);
             }
         }
-        if (this.emitableItemsInitialized && this.emitableItems.equals(this.collectedEmitableItems)) {
+        if (this.emitableItemsInitialized && this.exposedEmitableItems.equals(this.collectedEmitableItems)) {
             return false;
         }
-        this.emitableItems.clear();
-        this.emitableItems.addAll(this.collectedEmitableItems);
+        this.exposedEmitableItems = ObjectSets.unmodifiable(new ObjectOpenHashSet<>(this.collectedEmitableItems));
         this.emitableItemsInitialized = true;
         return true;
     }
@@ -283,7 +279,7 @@ public final class PneumaticCraftRequesterNode implements ICraftingProvider {
             }
         }
 
-        private void refresh(final ObjectSet<AEKey> keys) {
+        private void refresh(final Set<AEKey> keys) {
             if (this.watcher == null) {
                 return;
             }

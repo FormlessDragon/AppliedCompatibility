@@ -13,7 +13,6 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.fluids.util.FluidList;
 import appeng.util.item.ItemList;
-import it.unimi.dsi.fastutil.objects.Object2LongMap;
 
 public final class PackagedAutoMEMonitorAdapter<T extends IAEStack<T>> implements IMEMonitor<T> {
 
@@ -65,12 +64,11 @@ public final class PackagedAutoMEMonitorAdapter<T extends IAEStack<T>> implement
     @Override
     public IItemList<T> getStorageList() {
         final IItemList<T> list = createList();
-        for (final Object2LongMap.Entry<AEKey> entry : this.storageService.getInventory().getAvailableStacks()) {
-            final AEKey key = entry.getKey();
-            if (PackagedAutoAeKeyBridge.matchesChannel(this.channel, key) && entry.getLongValue() > 0) {
-                list.addStorage(castOldStack(PackagedAutoAeKeyBridge.toOldStack(key, entry.getLongValue())));
+        this.storageService.getInventory().getAvailableStacks().forEach((key, amount) -> {
+            if (PackagedAutoAeKeyBridge.matchesChannel(this.channel, key) && amount > 0) {
+                list.addStorage(castOldStack(PackagedAutoAeKeyBridge.toOldStack(key, amount)));
             }
-        }
+        });
         return list;
     }
 

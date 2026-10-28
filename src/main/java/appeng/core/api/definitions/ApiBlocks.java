@@ -1,12 +1,12 @@
 package appeng.core.api.definitions;
 
+import ae2.core.definitions.AEBlockEntities;
+import ae2.core.definitions.AEBlocks;
 import appeng.api.definitions.IBlockDefinition;
 import appeng.api.definitions.IBlocks;
 import appeng.api.definitions.ITileDefinition;
 import appeng.core.features.BlockDefinition;
 import appeng.core.features.TileDefinition;
-import ae2.core.definitions.AEBlockEntities;
-import ae2.core.definitions.AEBlocks;
 import github.formlessdragon.appcompat.bridge.ae.LegacyAeItemMappings;
 
 public final class ApiBlocks implements IBlocks {

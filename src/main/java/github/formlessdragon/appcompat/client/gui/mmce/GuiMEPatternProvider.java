@@ -1,5 +1,6 @@
 package github.formlessdragon.appcompat.client.gui.mmce;
 
+import github.formlessdragon.appcompat.bridge.mmce.MMCEEnums;
 import ae2.api.client.AEKeyRendering;
 import ae2.api.stacks.AEFluidKey;
 import ae2.api.stacks.AEKey;
@@ -13,6 +14,7 @@ import github.formlessdragon.appcompat.common.container.mmce.ContainerMEPatternP
 import github.kasuminova.mmce.common.tile.MEPatternProvider;
 import github.kasuminova.mmce.common.tile.MEPatternProvider.WorkModeSetting;
 import github.kasuminova.mmce.common.util.AEFluidInventoryUpgradeable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -30,7 +32,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -168,7 +169,7 @@ public class GuiMEPatternProvider extends GuiMEBusBase<ContainerMEPatternProvide
             if (button instanceof PatternProviderTextureButton textureButton && textureButton.isMouseOver(mouseX, mouseY)) {
                 final List<ITextComponent> tooltip = textureButton.getTooltipMessage();
                 if (!tooltip.isEmpty()) {
-                    final List<String> lines = new ArrayList<>(tooltip.size());
+                    final List<String> lines = new ObjectArrayList<>(tooltip.size());
                     for (final ITextComponent line : tooltip) {
                         lines.add(line.getFormattedText());
                     }
@@ -302,14 +303,14 @@ public class GuiMEPatternProvider extends GuiMEBusBase<ContainerMEPatternProvide
     }
 
     private List<ITextComponent> buildReturnTooltip() {
-        final List<ITextComponent> tooltip = new ArrayList<>();
+        final List<ITextComponent> tooltip = new ObjectArrayList<>();
         tooltip.add(new TextComponentString(I18n.format("gui.mepatternprovider.return_items")));
         tooltip.add(new TextComponentString(I18n.format("gui.mepatternprovider.return_items.desc")));
         return tooltip;
     }
 
     private List<ITextComponent> buildWorkModeTooltip() {
-        final List<ITextComponent> tooltip = new ArrayList<>();
+        final List<ITextComponent> tooltip = new ObjectArrayList<>();
         final WorkModeSetting current = currentMode();
         tooltip.add(new TextComponentString(I18n.format("gui.mepatternprovider.work_mode.desc")));
         tooltip.add(new TextComponentString(prefixCurrent(current == WorkModeSetting.DEFAULT) + I18n.format("gui.mepatternprovider.default.desc")));
@@ -349,12 +350,11 @@ public class GuiMEPatternProvider extends GuiMEBusBase<ContainerMEPatternProvide
     }
 
     private WorkModeSetting currentMode() {
-        final WorkModeSetting[] modes = WorkModeSetting.values();
-        return modes[MathHelper.clamp(this.container.workMode, 0, modes.length - 1)];
+        return MMCEEnums.workMode(this.container.workMode);
     }
 
     private List<String> buildSubFluidTooltip() {
-        final List<String> tooltip = new ArrayList<>();
+        final List<String> tooltip = new ObjectArrayList<>();
         final GenericStack stack = this.container.subFluid.get(0);
         if (stack != null && stack.what() instanceof AEFluidKey fluidKey) {
             final long amount = stack.amount();
@@ -383,7 +383,7 @@ public class GuiMEPatternProvider extends GuiMEBusBase<ContainerMEPatternProvide
         if (stack == null) {
             return Collections.emptyList();
         }
-        final List<String> tooltip = new ArrayList<>();
+        final List<String> tooltip = new ObjectArrayList<>();
         tooltip.add(stack.what().getDisplayName().getFormattedText());
         tooltip.add(TextFormatting.GRAY + stack.what().formatAmount(stack.amount(), AmountFormat.FULL));
         return tooltip;

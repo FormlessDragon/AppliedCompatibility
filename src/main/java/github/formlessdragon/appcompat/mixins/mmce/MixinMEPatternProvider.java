@@ -26,13 +26,14 @@ import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.util.Platform;
 import appeng.util.inv.InvOperation;
 import github.formlessdragon.appcompat.bridge.mmce.PatternProviderCacheExtensions;
+import github.formlessdragon.appcompat.bridge.mmce.PatternProviderCacheInsertion;
 import github.kasuminova.mmce.common.tile.MEPatternProvider;
 import github.kasuminova.mmce.common.util.AEFluidInventoryUpgradeable;
 import github.kasuminova.mmce.common.util.InfItemFluidHandler;
 import hellfirepvp.modularmachinery.ModularMachinery;
 import hellfirepvp.modularmachinery.common.CommonProxy;
 import hellfirepvp.modularmachinery.common.machine.MachineComponent;
-import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -52,7 +53,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -98,7 +98,7 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
     @Shadow
     private String machineName;
     @Unique
-    private boolean ac_v;
+    private boolean appcompat$terminalVisible = true;
 
     @Shadow
     public abstract AppEngInternalInventory getPatterns();
@@ -123,7 +123,7 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
 
     @Override
     public boolean isVisibleInTerminal() {
-        return ac_v;
+        return this.appcompat$terminalVisible;
     }
 
     @Override
@@ -132,15 +132,18 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
     }
 
     @Override
-    public void setTerminalVisibility(boolean visible) {
-        ac_v = visible;
+    public void setTerminalVisibility(final boolean visible) {
+        if (this.appcompat$terminalVisible != visible) {
+            this.appcompat$terminalVisible = visible;
+            saveChanges();
+        }
     }
 
     @Override
     public List<IPatternDetails> getAvailablePatterns() {
         final IManagedGridNode node = this.getMainNode();
-        final List<IPatternDetails> result = new ArrayList<>();
-        if (node == null || !node.isActive()) {
+        final List<IPatternDetails> result = new ObjectArrayList<>();
+        if (node == null || !node.isOnline()) {
             return result;
         }
         final AppEngInternalInventory patterns = getPatterns();
@@ -186,7 +189,8 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
 
     @Override
     public boolean pushPattern(final IPatternDetails patternDetails, final KeyCounter[] inputHolder, final int multiplier) {
-        if (!canMergePatternPush(patternDetails)) {
+        if (multiplier <= 0 || !canMergePatternPush(patternDetails)
+            || !PatternProviderCacheExtensions.supportsInputs(inputHolder)) {
             return false;
         }
         final InfItemFluidHandler handler = getInfHandler();
@@ -194,14 +198,11 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
             return false;
         }
         for (final KeyCounter counter : inputHolder) {
-            for (final Object2LongMap.Entry<AEKey> entry : counter) {
-                final AEKey what = entry.getKey();
-                final long amount = entry.getLongValue();
-                if (amount <= 0) {
-                    continue;
+            counter.forEach((what, amount) -> {
+                if (amount > 0) {
+                    appcompat$pushKey(handler, what, amount);
                 }
-                appcompat$pushKey(handler, what, amount);
-            }
+            });
             counter.clear();
         }
         return true;
@@ -210,25 +211,9 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
     @Unique
     private void appcompat$pushKey(final InfItemFluidHandler handler, final AEKey what, final long amount) {
         if (what instanceof AEItemKey itemKey) {
-            long remaining = amount;
-            final int maxStack = Math.max(1, itemKey.toStack(1).getMaxStackSize());
-            while (remaining > 0) {
-                final int batch = (int) Math.min(remaining, maxStack);
-                final ItemStack stack = itemKey.toStack(batch);
-                handler.appendItem(stack);
-                remaining -= batch;
-            }
+            PatternProviderCacheInsertion.appendItems(handler, itemKey, amount);
         } else if (what instanceof AEFluidKey fluidKey) {
-            long remaining = amount;
-            while (remaining > 0) {
-                final int batch = (int) Math.min(remaining, Integer.MAX_VALUE);
-                final FluidStack fluidStack = fluidKey.toStack(batch);
-                final int filled = handler.fill(fluidStack, true);
-                if (filled <= 0) {
-                    break;
-                }
-                remaining -= filled;
-            }
+            PatternProviderCacheInsertion.appendFluid(handler, fluidKey, amount);
         } else {
             PatternProviderCacheExtensions.push(handler, what, amount);
         }
@@ -240,7 +225,7 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
             return false;
         }
         final IManagedGridNode node = this.getMainNode();
-        return node != null && node.isActive() && node.isPowered();
+        return node != null && node.isActive() && containsPattern(patternDetails.getDefinition());
     }
 
     @Override
@@ -279,8 +264,7 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
         }
         final AppEngInternalInventory patterns = getPatterns();
         for (int slot = 0; slot < patterns.getSlots(); slot++) {
-            final AEItemKey key = AEItemKey.of(patterns.getStackInSlot(slot));
-            if (pattern.equals(key)) {
+            if (pattern.matches(patterns.getStackInSlot(slot))) {
                 return true;
             }
         }
@@ -469,8 +453,15 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
 
     @Inject(method = "readCustomNBT", at = @At("TAIL"))
     private void appcompat$readPatternNBT(final NBTTagCompound compound, final CallbackInfo ci) {
+        this.appcompat$terminalVisible = !compound.hasKey("appcompat_terminal_visible")
+            || compound.getBoolean("appcompat_terminal_visible");
         appcompat$clearPatternCache();
         appcompat$requestPatternUpdate();
+    }
+
+    @Inject(method = "writeCustomNBT", at = @At("TAIL"))
+    private void appcompat$writePatternNBT(final NBTTagCompound compound, final CallbackInfo ci) {
+        compound.setBoolean("appcompat_terminal_visible", this.appcompat$terminalVisible);
     }
 
     @Inject(method = "validate", at = @At("TAIL"))

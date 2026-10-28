@@ -2,9 +2,9 @@ package github.formlessdragon.appcompat.bridge.enderioae;
 
 import com.enderio.core.common.util.stackable.Things;
 import github.formlessdragon.appcompat.bridge.ae.LegacyAeItemMappings;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.item.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public final class EnderIOThingQueue {
 
-    private static final List<PendingThing> PENDING = new ArrayList<>();
+    private static final List<PendingThing> PENDING = new ObjectArrayList<>();
 
     private EnderIOThingQueue() {
     }

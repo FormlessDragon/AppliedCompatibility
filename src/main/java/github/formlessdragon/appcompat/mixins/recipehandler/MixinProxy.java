@@ -19,7 +19,7 @@ public class MixinProxy {
         ),
         require = 1
     )
-    private boolean ignoreLegacyAE2Integration(String modId, Operation<Boolean> original) {
-        return !AppliedCompatibility.LEGACY_AE_MOD_ID.equals(modId) && original.call(modId);
+    private boolean ignoreLegacyAE2Integration(String modname, Operation<Boolean> original) {
+        return !AppliedCompatibility.LEGACY_AE_MOD_ID.equals(modname) && original.call(modname);
     }
 }

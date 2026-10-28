@@ -14,7 +14,7 @@ public class AppCompatJEIPlugin implements IModPlugin {
 
     @Override
     public void register(final @NonNull IModRegistry registry) {
-        if (AppCompatMixinDecisions.mmceLoaded) {
+        if (AppCompatMixinDecisions.shouldApply("mmce.MixinMEItemInputBus")) {
             for (final DynamicMachine machine : MachineRegistry.getRegistry()) {
                 registry.getRecipeTransferRegistry().addRecipeTransferHandler(
                     new AppCompatInputRecipeTransferHandler(),

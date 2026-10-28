@@ -1,11 +1,11 @@
 package appeng.core.api.definitions;
 
+import ae2.core.definitions.AEParts;
 import appeng.api.definitions.IItemDefinition;
 import appeng.api.definitions.IParts;
 import appeng.api.util.AEColoredItemDefinition;
 import appeng.core.features.ColoredItemDefinition;
 import appeng.core.features.ItemDefinition;
-import ae2.core.definitions.AEParts;
 import github.formlessdragon.appcompat.bridge.ae.LegacyAeItemMappings;
 
 public final class ApiParts implements IParts {

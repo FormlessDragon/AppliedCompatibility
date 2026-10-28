@@ -9,6 +9,7 @@ import ae2.api.networking.ticking.TickingRequest;
 import ae2.me.helpers.IGridConnectedTile;
 import appeng.api.networking.ticking.ITickManager;
 import appeng.api.storage.data.IAEFluidStack;
+import github.formlessdragon.appcompat.bridge.ae.ManagedNodeHelper;
 import github.formlessdragon.appcompat.bridge.mmce.AppCompatFluidBridge;
 import github.kasuminova.mmce.common.tile.MEFluidOutputBus;
 import github.kasuminova.mmce.common.tile.base.MEFluidBus;
@@ -37,7 +38,7 @@ public abstract class MixinMEFluidOutputBus extends MEFluidBus implements IGridT
     public TickRateModulation tickingRequest(final IGridNode gridNode, final int ticksSinceLastCall) {
         final IGridConnectedTile hostTile = (IGridConnectedTile) this;
         final IManagedGridNode managedNode = hostTile.getMainNode();
-        if (managedNode == null) {
+        if (managedNode == null || !managedNode.isActive()) {
             return TickRateModulation.IDLE;
         }
         final IGrid grid = managedNode.getGrid();
@@ -72,9 +73,9 @@ public abstract class MixinMEFluidOutputBus extends MEFluidBus implements IGridT
                 tanks.setFluidInSlot(slot, left);
             }
 
-            inTick = false;
             return successAtLeastOnce ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
         } finally {
+            inTick = false;
             rwLock.writeLock().unlock();
         }
     }
@@ -90,14 +91,6 @@ public abstract class MixinMEFluidOutputBus extends MEFluidBus implements IGridT
     )
     private boolean appcompat$redirectAlert(final ITickManager tick,
                                             final appeng.api.networking.IGridNode oldNode) {
-        final IManagedGridNode node = ((IGridConnectedTile) this).getMainNode();
-        if (node != null) {
-            final IGrid grid = node.getGrid();
-            final IGridNode gridNode = node.getNode();
-            if (grid != null && gridNode != null) {
-                grid.getTickManager().alertDevice(gridNode);
-            }
-        }
-        return true;
+        return ManagedNodeHelper.alert(((IGridConnectedTile) this).getMainNode());
     }
 }

@@ -9,6 +9,7 @@ import github.formlessdragon.appcompat.common.container.mmce.ContainerMEFluidInp
 import github.formlessdragon.appcompat.common.container.mmce.ContainerMEFluidInputBus.FluidConfigSlot;
 import github.formlessdragon.appcompat.common.container.mmce.SyncedFluidList;
 import github.kasuminova.mmce.common.tile.MEFluidInputBus;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -16,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -79,7 +79,7 @@ public class GuiMEFluidInputBus extends GuiMEBusBase<ContainerMEFluidInputBus> {
         if (key == null) {
             return Collections.emptyList();
         }
-        final List<String> tooltip = new ArrayList<>();
+        final List<String> tooltip = new ObjectArrayList<>();
         tooltip.add(key.getDisplayName().getFormattedText());
         if (this.playerInventory.getItemStack().isEmpty()) {
             tooltip.add(TextFormatting.GRAY + I18n.format("gui.ae2.Clean"));
@@ -106,7 +106,7 @@ public class GuiMEFluidInputBus extends GuiMEBusBase<ContainerMEFluidInputBus> {
         if (key == null) {
             return Collections.emptyList();
         }
-        final List<String> tooltip = new ArrayList<>();
+        final List<String> tooltip = new ObjectArrayList<>();
         tooltip.add(key.getDisplayName().getFormattedText());
         tooltip.add(fluids.amountAt(index) + " / " + capacity + " mB");
         return tooltip;
@@ -121,7 +121,7 @@ public class GuiMEFluidInputBus extends GuiMEBusBase<ContainerMEFluidInputBus> {
         if (!isFluidIngredient(ingredient)) {
             return Collections.emptyList();
         }
-        final List<Slot> slots = new ArrayList<>();
+        final List<Slot> slots = new ObjectArrayList<>();
         for (final Slot slot : this.container.inventorySlots) {
             if (slot instanceof FluidConfigSlot) {
                 slots.add(slot);

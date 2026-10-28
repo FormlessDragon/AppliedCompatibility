@@ -5,7 +5,6 @@ import appeng.api.storage.data.IItemList;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.io.IOException;
 
 public interface IStorageChannel<T extends IAEStack<T>> {
 
@@ -21,7 +20,7 @@ public interface IStorageChannel<T extends IAEStack<T>> {
 
     T createStack(Object input);
 
-    T readFromPacket(ByteBuf input) throws IOException;
+    T readFromPacket(ByteBuf input);
 
     T createFromNBT(NBTTagCompound nbt);
 }

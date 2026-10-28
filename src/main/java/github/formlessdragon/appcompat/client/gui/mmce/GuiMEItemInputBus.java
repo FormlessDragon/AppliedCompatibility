@@ -11,6 +11,7 @@ import ae2.integration.modules.hei.GenericIngredientHelper;
 import github.formlessdragon.appcompat.common.container.mmce.ContainerMEItemInputBus;
 import github.formlessdragon.appcompat.common.container.mmce.ContainerMEItemInputBus.ItemConfigSlot;
 import github.kasuminova.mmce.common.tile.MEItemInputBus;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -19,7 +20,6 @@ import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class GuiMEItemInputBus extends GuiMEBusBase<ContainerMEItemInputBus> {
     }
 
     private static List<String> getScrollActionInfo() {
-        final List<String> tooltip = new ArrayList<>();
+        final List<String> tooltip = new ObjectArrayList<>();
         tooltip.add(TextFormatting.GRAY + I18n.format("gui.meiteminputbus.inv_action"));
         final boolean shift = isShiftKeyDown();
         final boolean ctrl = isCtrlKeyDown();
@@ -155,7 +155,7 @@ public class GuiMEItemInputBus extends GuiMEBusBase<ContainerMEItemInputBus> {
 
     @Override
     public Collection<? extends Slot> getHEISlots(final Object ingredient) {
-        final List<Slot> slots = new ArrayList<>();
+        final List<Slot> slots = new ObjectArrayList<>();
         for (final Slot slot : this.container.inventorySlots) {
             if (slot instanceof ItemConfigSlot itemConfigSlot && !toItemFilterStack(itemConfigSlot, ingredient).isEmpty()) {
                 slots.add(slot);
@@ -170,7 +170,7 @@ public class GuiMEItemInputBus extends GuiMEBusBase<ContainerMEItemInputBus> {
         if (slot != null) {
             final ItemStack stack = slot.getStack();
             if (!stack.isEmpty()) {
-                final List<String> tooltip = new ArrayList<>(this.getItemToolTip(stack));
+                final List<String> tooltip = new ObjectArrayList<>(this.getItemToolTip(stack));
                 if (slot instanceof ItemConfigSlot) {
                     tooltip.add(TextFormatting.GRAY + I18n.format("gui.meiteminputbus.items_marked", formatItemAmount(stack)));
                     tooltip.addAll(getScrollActionInfo());

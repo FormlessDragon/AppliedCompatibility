@@ -2,9 +2,9 @@ package github.formlessdragon.appcompat.bridge.packagedauto;
 
 import ae2.api.behaviors.ContainerItemStrategies;
 import ae2.api.behaviors.EmptyingAction;
-import ae2.api.integrations.hei.IngredientConverter;
-import ae2.api.integrations.hei.IngredientConverters;
+import ae2.api.stacks.AEItemKey;
 import ae2.api.stacks.GenericStack;
+import ae2.integration.modules.hei.GenericIngredientHelper;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mezz.jei.api.gui.IGhostIngredientHandler;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -86,34 +86,29 @@ public final class PackagedEncoderGhostBridge {
 
     public static ItemStack toRightClickStack(final Object ingredient) {
         if (ingredient instanceof ItemStack stack) {
-            final EmptyingAction action = ContainerItemStrategies.getEmptyingAction(stack);
-            return action == null ? ItemStack.EMPTY : GenericStack.wrapInItemStack(action.what(), action.maxAmount());
+            return toClickStack(stack, 1);
         }
-        return toWrappedIngredientStack(ingredient);
+        final GenericStack stack = GenericIngredientHelper.ingredientToStack(ingredient);
+        if (stack != null && stack.what() instanceof AEItemKey key) {
+            return toClickStack(key.toStack(), 1);
+        }
+        return stack == null ? ItemStack.EMPTY : GenericStack.wrapInItemStack(stack);
     }
 
     private static ItemStack toWrappedIngredientStack(final Object ingredient) {
-        for (final IngredientConverter<?> converter : IngredientConverters.getConverters()) {
-            final ItemStack stack = toWrappedIngredientStack(converter, ingredient);
-            if (!stack.isEmpty()) {
-                return stack;
-            }
+        final GenericStack stack = GenericIngredientHelper.ingredientToStack(ingredient);
+        if (stack != null && stack.what() instanceof AEItemKey key && stack.amount() <= Integer.MAX_VALUE) {
+            return key.toStack((int) stack.amount());
         }
-        return ItemStack.EMPTY;
+        return stack == null ? ItemStack.EMPTY : GenericStack.wrapInItemStack(stack);
     }
 
     private static GenericStack toGenericStack(final Object ingredient) {
         if (ingredient instanceof ItemStack stack) {
-            final GenericStack wrapped = GenericStack.unwrapItemStack(stack);
-            return wrapped == null ? null : wrapped;
+            return GenericStack.unwrapItemStack(stack);
         }
-        for (final IngredientConverter<?> converter : IngredientConverters.getConverters()) {
-            final GenericStack stack = toGenericStack(converter, ingredient);
-            if (stack != null && stack.amount() > 0) {
-                return stack;
-            }
-        }
-        return null;
+        return GenericIngredientHelper.hasItemStackTooltip(ingredient) ? null
+            : GenericIngredientHelper.ingredientToStack(ingredient);
     }
 
     public static int activeMouseButton() {
@@ -128,23 +123,6 @@ public final class PackagedEncoderGhostBridge {
             return 0;
         }
         return -1;
-    }
-
-    private static <T> ItemStack toWrappedIngredientStack(final IngredientConverter<T> converter, final Object ingredient) {
-        final Class<? extends T> ingredientClass = converter.getIngredientType().getIngredientClass();
-        if (!ingredientClass.isInstance(ingredient)) {
-            return ItemStack.EMPTY;
-        }
-        final GenericStack stack = converter.getStackFromIngredient(ingredientClass.cast(ingredient));
-        return stack == null ? ItemStack.EMPTY : GenericStack.wrapInItemStack(stack);
-    }
-
-    private static <T> GenericStack toGenericStack(final IngredientConverter<T> converter, final Object ingredient) {
-        final Class<? extends T> ingredientClass = converter.getIngredientType().getIngredientClass();
-        if (!ingredientClass.isInstance(ingredient)) {
-            return null;
-        }
-        return converter.getStackFromIngredient(ingredientClass.cast(ingredient));
     }
 
     private record SlotTarget<I>(GuiContainer gui, Slot slot, int fallbackMouseButton, ItemStack leftStack, ItemStack rightStack) implements IGhostIngredientHandler.Target<I> {

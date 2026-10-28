@@ -8,6 +8,7 @@ import ae2.api.networking.ticking.TickRateModulation;
 import ae2.api.networking.ticking.TickingRequest;
 import ae2.me.helpers.IGridConnectedTile;
 import appeng.api.networking.ticking.ITickManager;
+import github.formlessdragon.appcompat.bridge.ae.ManagedNodeHelper;
 import github.formlessdragon.appcompat.bridge.mmce.AppCompatGasBridge;
 import github.kasuminova.mmce.common.tile.MEGasOutputBus;
 import github.kasuminova.mmce.common.tile.base.MEGasBus;
@@ -35,7 +36,7 @@ public abstract class MixinMEGasOutputBus extends MEGasBus implements IGridTicka
     public TickRateModulation tickingRequest(final IGridNode gridNode, final int ticksSinceLastCall) {
         final IGridConnectedTile hostTile = (IGridConnectedTile) this;
         final IManagedGridNode managedNode = hostTile.getMainNode();
-        if (managedNode == null) {
+        if (managedNode == null || !managedNode.isActive()) {
             return TickRateModulation.IDLE;
         }
         final IGrid grid = managedNode.getGrid();
@@ -85,14 +86,6 @@ public abstract class MixinMEGasOutputBus extends MEGasBus implements IGridTicka
     )
     private boolean appcompat$redirectAlert(final ITickManager tick,
                                             final appeng.api.networking.IGridNode oldNode) {
-        final IManagedGridNode node = ((IGridConnectedTile) this).getMainNode();
-        if (node != null) {
-            final IGrid grid = node.getGrid();
-            final IGridNode gridNode = node.getNode();
-            if (grid != null && gridNode != null) {
-                grid.getTickManager().alertDevice(gridNode);
-            }
-        }
-        return true;
+        return ManagedNodeHelper.alert(((IGridConnectedTile) this).getMainNode());
     }
 }

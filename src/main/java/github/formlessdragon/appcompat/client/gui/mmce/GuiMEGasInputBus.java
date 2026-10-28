@@ -7,6 +7,7 @@ import github.formlessdragon.appcompat.common.container.mmce.ContainerMEGasInput
 import github.formlessdragon.appcompat.common.container.mmce.ContainerMEGasInputBus.GasConfigSlot;
 import github.formlessdragon.appcompat.common.container.mmce.SyncedGasList;
 import github.kasuminova.mmce.common.tile.MEGasInputBus;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.ramidzkh.mekae2.ae2.AEGasKey;
 import mekanism.api.gas.GasStack;
 import mekanism.client.render.MekanismRenderer;
@@ -19,7 +20,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -82,7 +82,7 @@ public class GuiMEGasInputBus extends GuiMEBusBase<ContainerMEGasInputBus> {
         if (key == null) {
             return Collections.emptyList();
         }
-        final List<String> tooltip = new ArrayList<>();
+        final List<String> tooltip = new ObjectArrayList<>();
         tooltip.add(key.getDisplayName().getFormattedText());
         if (this.playerInventory.getItemStack().isEmpty()) {
             tooltip.add(TextFormatting.GRAY + I18n.format("gui.ae2.Clean"));
@@ -133,7 +133,7 @@ public class GuiMEGasInputBus extends GuiMEBusBase<ContainerMEGasInputBus> {
         if (key == null) {
             return Collections.emptyList();
         }
-        final List<String> tooltip = new ArrayList<>();
+        final List<String> tooltip = new ObjectArrayList<>();
         tooltip.add(key.getDisplayName().getFormattedText());
         tooltip.add(gases.amountAt(index) + " / " + capacity + " mB");
         return tooltip;
@@ -148,7 +148,7 @@ public class GuiMEGasInputBus extends GuiMEBusBase<ContainerMEGasInputBus> {
         if (!isGasIngredient(ingredient)) {
             return Collections.emptyList();
         }
-        final List<Slot> slots = new ArrayList<>();
+        final List<Slot> slots = new ObjectArrayList<>();
         for (final Slot slot : this.container.inventorySlots) {
             if (slot instanceof GasConfigSlot) {
                 slots.add(slot);

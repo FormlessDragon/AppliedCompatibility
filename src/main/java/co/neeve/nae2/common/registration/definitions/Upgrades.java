@@ -19,11 +19,10 @@ public final class Upgrades {
     }
 
     public Optional<UpgradeType> getById(final int itemDamage) {
-        final UpgradeType[] values = UpgradeType.values();
-        if (itemDamage < 0 || itemDamage >= values.length) {
+        if (itemDamage < 0 || itemDamage >= UpgradeType.VALUES.length) {
             return Optional.empty();
         }
-        return Optional.of(values[itemDamage]);
+        return Optional.of(UpgradeType.VALUES[itemDamage]);
     }
 
     public IItemDefinition hyperAcceleration() { return this.hyperAcceleration; }
@@ -40,6 +39,8 @@ public final class Upgrades {
         HYPER_ACCELERATION("hyper_acceleration"),
         AUTO_COMPLETE("auto_complete"),
         GREGTECH_CIRCUIT("gregtech_circuit");
+
+        public static final UpgradeType[] VALUES = values();
 
         private final String id;
 

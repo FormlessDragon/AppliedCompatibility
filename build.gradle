@@ -200,6 +200,9 @@ dependencies {
         testImplementation 'org.junit.jupiter:junit-jupiter:6.0.3'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
         testRuntimeOnly 'com.google.code.gson:gson:2.10.1'
+        // Plain-JVM codec tests do not run Forge's optional-interface stripping transformer.
+        testRuntimeOnly 'curse.maven:cofh-core-69162:2920433'
+        testRuntimeOnly 'curse.maven:industrial-craft-242638:2835644'
     }
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 }

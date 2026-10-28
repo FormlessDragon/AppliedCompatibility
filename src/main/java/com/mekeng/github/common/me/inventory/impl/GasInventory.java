@@ -6,13 +6,11 @@ import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTank;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class GasInventory implements IGasInventory {
-
-    private final GasTank[] tanks;
+public record GasInventory(GasTank[] tanks) implements IGasInventory {
 
     public GasInventory(final int size, final int capacity, final IGasInventoryHost host) {
         final IGasInventoryHost actualHost = host == null ? IGasInventoryHost.empty() : host;
-        this.tanks = new GasTank[size];
+        this(new GasTank[size]);
         for (int i = 0; i < size; i++) {
             final int slot = i;
             this.tanks[i] = new NotifiableGasTank(capacity, () -> actualHost.onGasInventoryChanged(this, slot));
@@ -69,11 +67,6 @@ public class GasInventory implements IGasInventory {
     @Override
     public boolean usable(final int slot) {
         return slot >= 0 && slot < this.tanks.length && this.tanks[slot] != null && this.tanks[slot].getMaxGas() > 0;
-    }
-
-    @Override
-    public GasTank[] getTanks() {
-        return this.tanks;
     }
 
     @Override

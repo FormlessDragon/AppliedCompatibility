@@ -4,9 +4,12 @@ import ae2.api.networking.IGridNode;
 import ae2.api.networking.ticking.IGridTickable;
 import ae2.api.networking.ticking.TickRateModulation;
 import ae2.api.networking.ticking.TickingRequest;
+import ae2.api.stacks.KeyAmounts;
+import ae2.me.helpers.IGridConnectedTile;
 import github.alecsio.mmceaddons.common.hatch.thaumcraft.ae2.essentia.MEEssentiaBus;
 import github.alecsio.mmceaddons.common.hatch.thaumcraft.ae2.essentia.MEEssentiaOutputBus;
 import github.alecsio.mmceaddons.common.hatch.thaumcraft.ae2.essentia.RequirementEssentia;
+import github.formlessdragon.appcompat.bridge.ae.ManagedNodeHelper;
 import github.formlessdragon.appcompat.bridge.mmceaddons.AppCompatEssentiaBridge;
 import hellfirepvp.modularmachinery.common.crafting.helper.CraftCheck;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,7 +18,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Map;
-import java.util.concurrent.locks.ReadWriteLock;
 
 @Mixin(value = MEEssentiaOutputBus.class, remap = false, priority = 999)
 public abstract class MixinMEEssentiaOutputBus
@@ -23,13 +25,14 @@ public abstract class MixinMEEssentiaOutputBus
     implements IGridTickable {
 
     @Shadow
-    protected ReadWriteLock lock;
-    @Shadow
     private Map<String, Long> aspectAmounts;
 
     @Overwrite
     protected void updateSnapshot() {
         this.markNoUpdateSync();
+        if (!this.aspectAmounts.isEmpty()) {
+            ManagedNodeHelper.alert(((IGridConnectedTile) this).getMainNode());
+        }
     }
 
     @Overwrite
@@ -47,7 +50,8 @@ public abstract class MixinMEEssentiaOutputBus
         if (remaining > 0) {
             this.lock.writeLock().lock();
             try {
-                this.aspectAmounts.merge(requirement.getEssentiaStack().getAspectTag(), remaining, Long::sum);
+                this.aspectAmounts.merge(requirement.getEssentiaStack().getAspectTag(), remaining,
+                    (left, right) -> KeyAmounts.add(AppCompatEssentiaBridge.key(requirement), left, right));
                 this.markNoUpdateSync();
             } finally {
                 this.lock.writeLock().unlock();

@@ -3,6 +3,7 @@ package extracells.registries;
 import extracells.integration.Integration;
 import github.formlessdragon.appcompat.bridge.ae.LegacyAeItemMappings;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -28,7 +29,7 @@ public enum BlockEnum {
         if (stack.getItem() instanceof ItemBlock itemBlock) {
             return itemBlock.getBlock();
         }
-        return net.minecraft.init.Blocks.BARRIER;
+        return Blocks.BARRIER;
     }
 
     public String getInternalName() {

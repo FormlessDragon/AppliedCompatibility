@@ -21,6 +21,8 @@ public enum AEColor {
     BLACK("Black", "gui.appliedenergistics2.Black", "black", EnumDyeColor.BLACK, 0x131313, 0x272727, 0x3b3b3b, 0xffffff),
     TRANSPARENT("Fluix", "gui.appliedenergistics2.Fluix", "fluix", null, 0x5a479e, 0x915dcd, 0xe2a3e3, 0x000000);
 
+    public static final AEColor[] VALUES = values();
+
     public static final AEColor[] VALID_COLORS = new AEColor[] {
         WHITE,
         ORANGE,
@@ -66,7 +68,7 @@ public enum AEColor {
     }
 
     public static AEColor fromDye(final EnumDyeColor vanillaDye) {
-        for (final AEColor value : values()) {
+        for (final AEColor value : VALUES) {
             if (value.dye == vanillaDye) {
                 return value;
             }

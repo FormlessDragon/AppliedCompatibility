@@ -16,15 +16,12 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Map;
-import java.util.concurrent.locks.ReadWriteLock;
 
 @Mixin(value = MEEssentiaInputBus.class, remap = false, priority = 999)
 public abstract class MixinMEEssentiaInputBus
     extends MEEssentiaBus
     implements IGridTickable {
 
-    @Shadow
-    protected ReadWriteLock lock;
     @Shadow
     private Map<String, Long> aspectAmounts;
 
@@ -50,16 +47,7 @@ public abstract class MixinMEEssentiaInputBus
 
     @Overwrite
     public void handle(final RequirementEssentia requirement) {
-        final long extracted = AppCompatEssentiaBridge.extract(this, requirement);
-        if (extracted > 0) {
-            this.lock.writeLock().lock();
-            try {
-                this.aspectAmounts.merge(requirement.getEssentiaStack().getAspectTag(), extracted, Long::sum);
-                this.markNoUpdateSync();
-            } finally {
-                this.lock.writeLock().unlock();
-            }
-        }
+        AppCompatEssentiaBridge.extract(this, requirement);
         super.handle(requirement);
     }
 

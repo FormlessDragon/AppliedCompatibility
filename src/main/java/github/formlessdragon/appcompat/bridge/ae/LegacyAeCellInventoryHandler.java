@@ -1,7 +1,7 @@
 package github.formlessdragon.appcompat.bridge.ae;
 
-import ae2.api.storage.cells.StorageCell;
 import ae2.api.stacks.AEKey;
+import ae2.api.storage.cells.StorageCell;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.IncludeExclude;
@@ -11,7 +11,6 @@ import appeng.api.storage.ICellInventoryHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
-import it.unimi.dsi.fastutil.objects.Object2LongMap;
 
 public final class LegacyAeCellInventoryHandler<T extends IAEStack<T>> implements ICellInventoryHandler<T> {
 
@@ -61,12 +60,12 @@ public final class LegacyAeCellInventoryHandler<T extends IAEStack<T>> implement
     @Override
     public IItemList<T> getStorageList() {
         final IItemList<T> list = LegacyAeStorageBridge.createList(this.channel);
-        for (final Object2LongMap.Entry<AEKey> entry : this.cell.getAvailableStacks()) {
-            if (entry.getLongValue() > 0 && LegacyAeStorageBridge.matchesChannel(this.channel, entry.getKey())) {
+        this.cell.getAvailableStacks().forEach((key, amount) -> {
+            if (amount > 0 && LegacyAeStorageBridge.matchesChannel(this.channel, key)) {
                 list.addStorage(LegacyAeStorageBridge.castOldStack(
-                    LegacyAeStorageBridge.toOldStack(entry.getKey(), entry.getLongValue())));
+                    LegacyAeStorageBridge.toOldStack(key, amount)));
             }
-        }
+        });
         return list;
     }
 

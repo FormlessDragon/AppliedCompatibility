@@ -4,6 +4,7 @@ import ae2.api.integrations.hei.IngredientConverter;
 import ae2.api.integrations.hei.IngredientConverters;
 import ae2.api.stacks.AEKey;
 import ae2.api.stacks.GenericStack;
+import ae2.api.stacks.KeyAmounts;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2LongLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
@@ -54,11 +55,7 @@ public final class PackagedAutoJeiTransferBridge {
             }
             final AEKey key = genericStack.what();
             final long amount = genericStack.amount();
-            final long previous = genericStacks.addTo(key, amount);
-            final long added = previous + amount;
-            if (((previous ^ added) & (amount ^ added)) < 0) {
-                genericStacks.put(key, added < 0 ? Long.MAX_VALUE : Long.MIN_VALUE);
-            }
+            genericStacks.put(key, KeyAmounts.add(key, genericStacks.getLong(key), amount));
         }
         final List<ItemStack> result = MiscUtil.condenseStacks(itemStacks, ignoreStackSize);
         for (final Object2LongMap.Entry<AEKey> entry : genericStacks.object2LongEntrySet()) {

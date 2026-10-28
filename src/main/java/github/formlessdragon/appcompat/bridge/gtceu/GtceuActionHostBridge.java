@@ -1,5 +1,6 @@
 package github.formlessdragon.appcompat.bridge.gtceu;
 
+import ae2.api.networking.IGridNode;
 import appeng.api.networking.security.IActionHost;
 
 public final class GtceuActionHostBridge implements ae2.api.networking.security.IActionHost {
@@ -11,7 +12,7 @@ public final class GtceuActionHostBridge implements ae2.api.networking.security.
     }
 
     @Override
-    public ae2.api.networking.IGridNode getActionableNode() {
+    public IGridNode getActionableNode() {
         if (this.host.getActionableNode() instanceof GtceuGridNodeAdapter node) {
             return node.unwrap();
         }

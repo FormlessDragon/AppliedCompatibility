@@ -1,13 +1,15 @@
 package github.formlessdragon.appcompat.mixins.packagedauto;
 
 import ae2.api.crafting.IPatternDetails;
-import ae2.api.networking.crafting.ICraftingProvider;
 import ae2.api.stacks.AEKey;
 import ae2.api.stacks.GenericStack;
 import ae2.api.stacks.KeyCounter;
 import appeng.api.networking.crafting.ICraftingProviderHelper;
 import github.formlessdragon.appcompat.bridge.packagedauto.PackagedAutoNodeAccess;
+import github.formlessdragon.appcompat.bridge.packagedauto.PackagedPatternContainer;
 import github.formlessdragon.appcompat.bridge.packagedauto.PackagedPatternDetails;
+import github.formlessdragon.appcompat.bridge.packagedauto.PackagedPatternDisplay;
+import github.formlessdragon.appcompat.bridge.packagedauto.PackagedPatternInventory;
 import github.formlessdragon.appcompat.bridge.packagedauto.PackagedPatternStacks;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -27,7 +29,16 @@ import thelm.packagedauto.tile.TilePackagerExtension;
 import java.util.List;
 
 @Mixin(value = TilePackager.class, remap = false)
-public abstract class MixinTilePackager extends MixinTileBase implements ICraftingProvider {
+public abstract class MixinTilePackager extends MixinTileBase implements PackagedPatternContainer {
+
+    @Unique
+    private final PackagedPatternInventory appcompat$terminalPatterns =
+        new PackagedPatternInventory(this::appcompat$buildPatterns, PackagedPatternDisplay::encode);
+
+    @Override
+    public PackagedPatternInventory getTerminalPatternInventory() {
+        return this.appcompat$terminalPatterns;
+    }
 
     @Shadow
     public List<IPackagePattern> patternList;
@@ -46,10 +57,13 @@ public abstract class MixinTilePackager extends MixinTileBase implements ICrafti
 
     @Override
     public List<IPatternDetails> getAvailablePatterns() {
+        return appcompat$mainNode() != null && appcompat$mainNode().isOnline()
+            ? this.appcompat$terminalPatterns.getPatterns() : List.of();
+    }
+
+    @Unique
+    private List<IPatternDetails> appcompat$buildPatterns() {
         final List<IPatternDetails> result = new ObjectArrayList<>();
-        if (!appcompat$mainNode().isActive()) {
-            return result;
-        }
         for (final IPackagePattern pattern : this.patternList) {
             result.add(PackagedPatternDetails.packagePattern(pattern));
         }
@@ -58,7 +72,9 @@ public abstract class MixinTilePackager extends MixinTileBase implements ICrafti
 
     @Override
     public boolean pushPattern(final IPatternDetails patternDetails, final KeyCounter[] inputHolder, final int multiplier) {
-        if (!appcompat$mainNode().isActive() || !(patternDetails instanceof PackagedPatternDetails pattern) || pattern.packagePattern() == null) {
+        if (multiplier != 1 || !appcompat$mainNode().isActive()
+            || !(patternDetails instanceof PackagedPatternDetails pattern) || pattern.packagePattern() == null
+            || !this.appcompat$terminalPatterns.containsCraftingPattern(pattern.getDefinition())) {
             return false;
         }
         final ItemStack outputStack = pattern.packagePattern().getOutput();

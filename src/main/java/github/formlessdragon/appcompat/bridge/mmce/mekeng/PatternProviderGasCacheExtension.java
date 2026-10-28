@@ -7,6 +7,7 @@ import ae2.api.stacks.GenericStack;
 import github.formlessdragon.appcompat.bridge.mmce.AppCompatGasBridge;
 import github.formlessdragon.appcompat.bridge.mmce.PatternProviderCacheExtension;
 import github.formlessdragon.appcompat.bridge.mmce.PatternProviderCacheExtensions;
+import github.formlessdragon.appcompat.bridge.mmce.PatternProviderCacheInsertion;
 import github.kasuminova.mmce.common.util.InfItemFluidHandler;
 import me.ramidzkh.mekae2.ae2.AEGasKey;
 import mekanism.api.gas.GasStack;
@@ -30,19 +31,20 @@ public final class PatternProviderGasCacheExtension implements PatternProviderCa
     }
 
     @Override
+    public boolean supports(final AEKey what) {
+        return what instanceof AEGasKey;
+    }
+
+    @Override
     public boolean push(final InfItemFluidHandler handler, final AEKey what, final long amount) {
         if (!(what instanceof AEGasKey gasKey)) {
             return false;
         }
-        long remaining = amount;
-        while (remaining > 0) {
-            final int batch = (int) Math.min(remaining, Integer.MAX_VALUE);
-            final GasStack gasStack = gasKey.toStack(batch);
-            final int received = handler.receiveGas(null, gasStack, true);
-            if (received <= 0) {
-                break;
-            }
-            remaining -= received;
+        synchronized (handler) {
+            final GasStack template = gasKey.toStack(1);
+            PatternProviderCacheInsertion.insertBatches(amount, getGasStackList(handler),
+                template::isGasEqual, stack -> stack.amount,
+                batch -> handler.receiveGas(null, gasKey.toStack(batch), true));
         }
         return true;
     }

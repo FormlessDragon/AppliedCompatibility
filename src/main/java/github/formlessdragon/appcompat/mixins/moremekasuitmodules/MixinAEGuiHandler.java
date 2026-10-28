@@ -13,11 +13,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinAEGuiHandler {
 
     @Inject(method = "getServerGuiElement", at = @At("HEAD"), cancellable = true)
-    private void appcompat$openHelmetTerminal(final int id, final EntityPlayer player, final World world,
+    private void appcompat$openHelmetTerminal(final int ID, final EntityPlayer player, final World world,
                                               final int x, final int y, final int z,
                                               final CallbackInfoReturnable<Object> cir) {
-        if (MekaSuitWirelessBridge.handlesGui(id, player, x)) {
-            cir.setReturnValue(MekaSuitWirelessBridge.createContainer(id, player, x));
+        if (MekaSuitWirelessBridge.handlesGui(ID, player, x)) {
+            cir.setReturnValue(MekaSuitWirelessBridge.createContainer(ID, player, x));
         }
     }
 }

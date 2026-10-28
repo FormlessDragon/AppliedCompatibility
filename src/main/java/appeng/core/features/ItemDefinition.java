@@ -1,7 +1,7 @@
 package appeng.core.features;
 
-import appeng.api.definitions.IItemDefinition;
 import ae2.util.helpers.ItemComparisonHelper;
+import appeng.api.definitions.IItemDefinition;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 

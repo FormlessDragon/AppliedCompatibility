@@ -1,9 +1,9 @@
 package appeng.core.api.definitions;
 
+import ae2.core.definitions.AEItems;
 import appeng.api.definitions.IItemDefinition;
 import appeng.api.definitions.IMaterials;
 import appeng.core.features.ItemDefinition;
-import ae2.core.definitions.AEItems;
 import github.formlessdragon.appcompat.bridge.ae.LegacyAeItemMappings;
 
 public final class ApiMaterials implements IMaterials {

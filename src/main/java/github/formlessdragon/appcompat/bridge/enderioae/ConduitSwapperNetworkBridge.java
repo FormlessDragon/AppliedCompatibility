@@ -9,15 +9,14 @@ import ae2.api.networking.energy.IEnergyService;
 import ae2.api.networking.security.IActionSource;
 import ae2.api.networking.storage.IStorageService;
 import ae2.api.stacks.AEItemKey;
-import ae2.api.stacks.AEKey;
 import ae2.api.stacks.KeyCounter;
 import ae2.api.storage.MEStorage;
 import ae2.api.storage.StorageHelper;
-import com.enderio.core.common.util.ItemUtil;
 import ae2.api.util.DimensionalBlockPos;
 import ae2.items.tools.powered.WirelessTerminals;
 import ae2.tile.networking.TileWirelessAccessPoint;
 import ae2.util.Platform;
+import com.enderio.core.common.util.ItemUtil;
 import crazypants.enderio.base.conduit.IConduit;
 import crazypants.enderio.base.conduit.IConduitItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,15 +24,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 
-import java.util.function.BiConsumer;
 import java.util.List;
-import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import java.util.function.BiConsumer;
 
 public final class ConduitSwapperNetworkBridge {
 
@@ -76,17 +74,17 @@ public final class ConduitSwapperNetworkBridge {
         if (context == null) {
             return;
         }
-        for (final Object2LongMap.Entry<AEKey> entry : context.cachedInventory) {
-            if (entry.getLongValue() <= 0 || !(entry.getKey() instanceof AEItemKey key)) {
-                continue;
+        context.cachedInventory.forEach((what, amount) -> {
+            if (amount <= 0 || !(what instanceof AEItemKey key)) {
+                return;
             }
-            final ItemStack candidate = key.toStack(clamp(entry.getLongValue()));
+            final ItemStack candidate = key.toStack(clamp(amount));
             if (candidate.getItem() instanceof IConduitItem conduitItem
                 && conduitItem.getBaseConduitType() == conduitClass
                 && !ItemUtil.areStacksEqual(candidate, source)) {
-                consumer.accept(candidate, clamp(entry.getLongValue()));
+                consumer.accept(candidate, clamp(amount));
             }
-        }
+        });
     }
 
     public static int extract(final EntityPlayer player, final ItemStack stack, final ItemStack requested,

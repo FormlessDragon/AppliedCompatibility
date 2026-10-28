@@ -9,9 +9,10 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridVisitor;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.IReadOnlyCollection;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public final class EnderIOLegacyExternalGridNode implements IGridNode {
     @Override
     public EnumSet<AEPartLocation> getConnectedSides() {
         final EnumSet<AEPartLocation> sides = EnumSet.noneOf(AEPartLocation.class);
-        for (final net.minecraft.util.EnumFacing side : this.node.getConnectedSides()) {
+        for (final EnumFacing side : this.node.getConnectedSides()) {
             sides.add(AEPartLocation.fromFacing(side));
         }
         return sides;
@@ -58,7 +59,7 @@ public final class EnderIOLegacyExternalGridNode implements IGridNode {
 
     @Override
     public IReadOnlyCollection<IGridConnection> getConnections() {
-        final List<IGridConnection> connections = new ArrayList<>(this.node.getConnections().size());
+        final List<IGridConnection> connections = new ObjectArrayList<>(this.node.getConnections().size());
         for (final ae2.api.networking.IGridConnection connection : this.node.getConnections()) {
             connections.add(new EnderIOLegacyGridConnection(connection, this.node, this));
         }

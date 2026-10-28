@@ -9,7 +9,7 @@ public interface IGasInventory {
 
     boolean usable(int slot);
 
-    GasTank[] getTanks();
+    GasTank[] tanks();
 
     GasStack getGasStack(int slot);
 

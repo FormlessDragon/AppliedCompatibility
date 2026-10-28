@@ -5,6 +5,7 @@ import ae2.container.AEBaseContainer;
 import ae2.container.guisync.GuiSync;
 import ae2.core.definitions.AEItems;
 import github.kasuminova.mmce.common.tile.MEFluidOutputBus;
+import github.kasuminova.mmce.common.util.AEFluidInventoryUpgradeable;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Collections;
@@ -53,7 +54,7 @@ public class ContainerMEFluidOutputBus extends AEBaseContainer {
     private void refreshCapacity() {
         final int installed = this.upgrades == null ? 0 : this.upgrades.getInstalledUpgrades(AEItems.CAPACITY_CARD.item());
         this.capacity = (int) (Math.pow(4, installed + 1) * 2000);
-        if (this.owner.getTanks() instanceof github.kasuminova.mmce.common.util.AEFluidInventoryUpgradeable upgradeable) {
+        if (this.owner.getTanks() instanceof AEFluidInventoryUpgradeable upgradeable) {
             upgradeable.setCapacity(this.capacity);
         }
     }

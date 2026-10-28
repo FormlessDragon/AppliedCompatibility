@@ -10,6 +10,7 @@ import ae2.me.helpers.IGridConnectedTile;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.fluids.util.AEFluidInventory;
 import appeng.fluids.util.IAEFluidTank;
+import github.formlessdragon.appcompat.bridge.ae.ManagedNodeHelper;
 import github.formlessdragon.appcompat.bridge.mmce.AppCompatFluidBridge;
 import github.kasuminova.mmce.common.tile.MEFluidInputBus;
 import github.kasuminova.mmce.common.tile.base.MEFluidBus;
@@ -48,7 +49,7 @@ public abstract class MixinMEFluidInputBus extends MEFluidBus implements IGridTi
     public TickRateModulation tickingRequest(final IGridNode gridNode, final int ticksSinceLastCall) {
         final IGridConnectedTile hostTile = (IGridConnectedTile) this;
         final IManagedGridNode managedNode = hostTile.getMainNode();
-        if (managedNode == null) {
+        if (managedNode == null || !managedNode.isActive()) {
             return TickRateModulation.IDLE;
         }
         final IGrid grid = managedNode.getGrid();
@@ -132,9 +133,9 @@ public abstract class MixinMEFluidInputBus extends MEFluidBus implements IGridTi
                 successAtLeastOnce = true;
             }
 
-            inTick = false;
             return successAtLeastOnce ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
         } finally {
+            inTick = false;
             rwLock.writeLock().unlock();
         }
     }
@@ -159,23 +160,13 @@ public abstract class MixinMEFluidInputBus extends MEFluidBus implements IGridTi
     public void uploadSettings(final NBTTagCompound settings) {
         config.readFromNBT(settings, "config");
         markForUpdate();
-        if (!needsUpdate()) {
+        if (needsUpdate()) {
             appcompat$alertManagedNode();
         }
     }
 
     @Unique
     private boolean appcompat$alertManagedNode() {
-        final IManagedGridNode managedNode = ((IGridConnectedTile) this).getMainNode();
-        if (managedNode == null || !managedNode.isReady() || !managedNode.isActive()) {
-            return false;
-        }
-        final IGrid grid = managedNode.getGrid();
-        final IGridNode gridNode = managedNode.getNode();
-        if (grid == null || gridNode == null) {
-            return false;
-        }
-        final var tickManager = grid.getTickManager();
-        return tickManager != null && tickManager.alertDevice(gridNode);
+        return ManagedNodeHelper.alert(((IGridConnectedTile) this).getMainNode());
     }
 }

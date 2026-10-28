@@ -1,8 +1,8 @@
 package github.formlessdragon.appcompat.bridge.packagedauto;
 
 import ae2.api.client.AEKeyRendering;
-import ae2.api.stacks.AmountFormat;
 import ae2.api.stacks.AEItemKey;
+import ae2.api.stacks.AmountFormat;
 import ae2.api.stacks.GenericStack;
 import ae2.core.localization.ButtonToolTips;
 import ae2.core.localization.Tooltips;

@@ -6,9 +6,9 @@ import ae2.client.gui.style.GuiStyleManager;
 import github.formlessdragon.appcompat.common.container.mmce.ContainerMEFluidOutputBus;
 import github.formlessdragon.appcompat.common.container.mmce.SyncedFluidList;
 import github.kasuminova.mmce.common.tile.MEFluidOutputBus;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,7 +65,7 @@ public class GuiMEFluidOutputBus extends GuiMEBusBase<ContainerMEFluidOutputBus>
         if (key == null) {
             return Collections.emptyList();
         }
-        final List<String> tooltip = new ArrayList<>();
+        final List<String> tooltip = new ObjectArrayList<>();
         tooltip.add(key.getDisplayName().getFormattedText());
         tooltip.add(fluids.amountAt(index) + " / " + capacity + " mB");
         return tooltip;

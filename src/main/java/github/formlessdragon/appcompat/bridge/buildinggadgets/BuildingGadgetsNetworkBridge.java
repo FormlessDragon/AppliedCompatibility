@@ -9,7 +9,6 @@ import ae2.api.networking.security.IActionHost;
 import ae2.api.networking.security.IActionSource;
 import ae2.api.networking.storage.IStorageService;
 import ae2.api.stacks.AEItemKey;
-import ae2.api.stacks.AEKey;
 import ae2.api.stacks.KeyCounter;
 import ae2.api.storage.MEStorage;
 import ae2.api.storage.StorageHelper;
@@ -18,7 +17,6 @@ import ae2.me.helpers.IGridConnectedTile;
 import ae2.util.Platform;
 import com.direwolf20.buildinggadgets.common.tools.NetworkIO;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
-import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -120,13 +118,12 @@ public final class BuildingGadgetsNetworkBridge {
 
             this.extractionKeys = new ObjectArrayList<>();
             this.extractionAmounts = new LongArrayList();
-            for (final Object2LongMap.Entry<AEKey> entry : availableStacks) {
-                if (entry.getLongValue() <= 0L || !(entry.getKey() instanceof AEItemKey itemKey)) {
-                    continue;
+            availableStacks.forEach((key, amount) -> {
+                if (amount > 0L && key instanceof AEItemKey itemKey) {
+                    this.extractionKeys.add(itemKey);
+                    this.extractionAmounts.add(amount);
                 }
-                this.extractionKeys.add(itemKey);
-                this.extractionAmounts.add(entry.getLongValue());
-            }
+            });
         }
 
         @Override

@@ -1,9 +1,9 @@
 package github.formlessdragon.appcompat.bridge.gtceu;
 
-import appeng.api.config.Actionable;
-import appeng.api.networking.energy.IEnergyGrid;
 import ae2.api.config.PowerMultiplier;
 import ae2.api.networking.energy.IEnergyService;
+import appeng.api.config.Actionable;
+import appeng.api.networking.energy.IEnergyGrid;
 
 public final class GtceuEnergyGridAdapter implements IEnergyGrid {
 

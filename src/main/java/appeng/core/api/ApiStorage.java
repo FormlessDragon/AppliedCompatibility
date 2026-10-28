@@ -23,6 +23,7 @@ import com.mekeng.github.common.me.data.impl.AEGasStack;
 import com.mekeng.github.common.me.storage.IGasStorageChannel;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mekanism.api.gas.GasStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,7 +31,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import org.jspecify.annotations.NonNull;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -107,7 +107,7 @@ public class ApiStorage implements IStorageHelper {
         }
 
         @Override
-        public IAEItemStack readFromPacket(final ByteBuf input) throws IOException {
+        public IAEItemStack readFromPacket(final ByteBuf input) {
             if (input == null) {
                 throw new IllegalArgumentException("Packet buffer is required");
             }
@@ -152,7 +152,7 @@ public class ApiStorage implements IStorageHelper {
         }
 
         @Override
-        public IAEFluidStack readFromPacket(final ByteBuf input) throws IOException {
+        public IAEFluidStack readFromPacket(final ByteBuf input) {
             if (input == null) {
                 throw new IllegalArgumentException("Packet buffer is required");
             }
@@ -194,7 +194,7 @@ public class ApiStorage implements IStorageHelper {
         }
 
         @Override
-        public IAEGasStack readFromPacket(final ByteBuf input) throws IOException {
+        public IAEGasStack readFromPacket(final ByteBuf input) {
             if (input == null) {
                 throw new IllegalArgumentException("Packet buffer is required");
             }
@@ -260,7 +260,7 @@ public class ApiStorage implements IStorageHelper {
 
         @Override
         public Collection<T> findFuzzy(final T filter, final FuzzyMode fuzzy) {
-            final it.unimi.dsi.fastutil.objects.ObjectArrayList<T> result = new it.unimi.dsi.fastutil.objects.ObjectArrayList<>();
+            final ObjectArrayList<T> result = new ObjectArrayList<>();
             if (filter == null) {
                 return result;
             }

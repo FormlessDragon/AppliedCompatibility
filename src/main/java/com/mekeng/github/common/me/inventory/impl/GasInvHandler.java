@@ -98,7 +98,7 @@ public class GasInvHandler implements IExtendedGasHandler {
                 continue;
             }
             final GasStack stored = this.inventory.getGasStack(i);
-            final GasTank tank = this.inventory.getTanks()[i];
+            final GasTank tank = this.inventory.tanks()[i];
             if (stored == null || stored.getGas() == gas && stored.amount < tank.getMaxGas()) {
                 return true;
             }
@@ -122,7 +122,7 @@ public class GasInvHandler implements IExtendedGasHandler {
 
     @Override
     public GasTankInfo @NonNull [] getTankInfo() {
-        return this.inventory.getTanks();
+        return this.inventory.tanks();
     }
 
     public boolean checkSide(final EnumFacing side) {

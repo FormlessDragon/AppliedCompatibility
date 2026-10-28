@@ -4,6 +4,7 @@ import ae2.client.gui.style.GuiStyleManager;
 import github.formlessdragon.appcompat.common.container.mmce.ContainerMEGasOutputBus;
 import github.formlessdragon.appcompat.common.container.mmce.SyncedGasList;
 import github.kasuminova.mmce.common.tile.MEGasOutputBus;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.ramidzkh.mekae2.ae2.AEGasKey;
 import mekanism.api.gas.GasStack;
 import mekanism.client.render.MekanismRenderer;
@@ -12,7 +13,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -93,7 +93,7 @@ public class GuiMEGasOutputBus extends GuiMEBusBase<ContainerMEGasOutputBus> {
         if (key == null) {
             return Collections.emptyList();
         }
-        final List<String> tooltip = new ArrayList<>();
+        final List<String> tooltip = new ObjectArrayList<>();
         tooltip.add(key.getDisplayName().getFormattedText());
         tooltip.add(gases.amountAt(index) + " / " + capacity + " mB");
         return tooltip;

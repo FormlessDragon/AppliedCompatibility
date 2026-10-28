@@ -3,10 +3,12 @@ package github.formlessdragon.appcompat.mixins.packagedauto;
 import ae2.api.config.Actionable;
 import ae2.api.config.PatternProviderInsertionMode;
 import ae2.api.crafting.IPatternDetails;
-import ae2.api.networking.crafting.ICraftingProvider;
 import ae2.api.stacks.KeyCounter;
 import appeng.api.networking.crafting.ICraftingProviderHelper;
+import github.formlessdragon.appcompat.bridge.packagedauto.PackagedPatternContainer;
 import github.formlessdragon.appcompat.bridge.packagedauto.PackagedPatternDetails;
+import github.formlessdragon.appcompat.bridge.packagedauto.PackagedPatternDisplay;
+import github.formlessdragon.appcompat.bridge.packagedauto.PackagedPatternInventory;
 import github.formlessdragon.appcompat.bridge.packagedauto.PackagedPatternKind;
 import github.formlessdragon.appcompat.bridge.packagedauto.PackagedPatternStacks;
 import github.formlessdragon.appcompat.bridge.packagedauto.PackagedPatternTargets;
@@ -27,7 +29,16 @@ import thelm.packagedauto.tile.TileUnpackager;
 import java.util.List;
 
 @Mixin(value = TileUnpackager.class, remap = false)
-public abstract class MixinTileUnpackager extends MixinTileBase implements ICraftingProvider {
+public abstract class MixinTileUnpackager extends MixinTileBase implements PackagedPatternContainer {
+
+    @Unique
+    private final PackagedPatternInventory appcompat$terminalPatterns =
+        new PackagedPatternInventory(this::appcompat$buildPatterns, PackagedPatternDisplay::encode);
+
+    @Override
+    public PackagedPatternInventory getTerminalPatternInventory() {
+        return this.appcompat$terminalPatterns;
+    }
 
     @Shadow
     public static int energyUsage;
@@ -55,10 +66,13 @@ public abstract class MixinTileUnpackager extends MixinTileBase implements ICraf
 
     @Override
     public List<IPatternDetails> getAvailablePatterns() {
+        return appcompat$mainNode() != null && appcompat$mainNode().isOnline()
+            ? this.appcompat$terminalPatterns.getPatterns() : List.of();
+    }
+
+    @Unique
+    private List<IPatternDetails> appcompat$buildPatterns() {
         final List<IPatternDetails> result = new ObjectArrayList<>();
-        if (!appcompat$mainNode().isActive()) {
-            return result;
-        }
         for (final IRecipeInfo recipe : this.recipeList) {
             if (!recipe.getOutputs().isEmpty()) {
                 result.add(PackagedPatternDetails.recipePattern(recipe));
@@ -69,7 +83,9 @@ public abstract class MixinTileUnpackager extends MixinTileBase implements ICraf
 
     @Override
     public boolean pushPattern(final IPatternDetails patternDetails, final KeyCounter[] inputHolder, final int multiplier) {
-        if (!appcompat$mainNode().isActive() || isBusy() || !(patternDetails instanceof PackagedPatternDetails pattern) || pattern.kind() != PackagedPatternKind.RECIPE) {
+        if (multiplier != 1 || !appcompat$mainNode().isActive() || isBusy()
+            || !(patternDetails instanceof PackagedPatternDetails pattern) || pattern.kind() != PackagedPatternKind.RECIPE
+            || !this.appcompat$terminalPatterns.containsCraftingPattern(pattern.getDefinition())) {
             return false;
         }
         final int energyReq = energyUsage * pattern.recipe().getPatterns().size();
@@ -155,7 +171,7 @@ public abstract class MixinTileUnpackager extends MixinTileBase implements ICraf
                 markDirty();
             }
         }
-        for (final EnumFacing facing : EnumFacing.values()) {
+        for (final EnumFacing facing : EnumFacing.VALUES) {
             final TileEntity tile = this.world.getTileEntity(this.pos.offset(facing));
             final TileUnpackager.PackageTracker trackerToEmpty = appcompat$findTrackerFacing(facing);
             if (trackerToEmpty == null) {

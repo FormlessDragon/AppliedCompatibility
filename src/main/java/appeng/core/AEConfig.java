@@ -1,9 +1,9 @@
 package appeng.core;
 
 import appeng.core.features.AEFeature;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,7 +17,7 @@ public final class AEConfig {
     };
     private static final AEConfig INSTANCE = new AEConfig();
 
-    private final Set<String> grinderBlackList = new HashSet<>();
+    private final Set<String> grinderBlackList = new ObjectOpenHashSet<>();
 
     private AEConfig() {
     }

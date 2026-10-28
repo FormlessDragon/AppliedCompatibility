@@ -15,6 +15,7 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.fluids.util.AEFluidStack;
 import appeng.fluids.util.IAEFluidTank;
 import github.kasuminova.mmce.common.tile.MEFluidInputBus;
+import github.kasuminova.mmce.common.util.AEFluidInventoryUpgradeable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
@@ -164,7 +165,7 @@ public class ContainerMEFluidInputBus extends AEBaseContainer {
     private void refreshCapacity() {
         final int installed = this.upgrades == null ? 0 : this.upgrades.getInstalledUpgrades(AEItems.CAPACITY_CARD.item());
         this.capacity = (int) (Math.pow(4, installed + 1) * 2000);
-        if (this.owner.getTanks() instanceof github.kasuminova.mmce.common.util.AEFluidInventoryUpgradeable upgradeable) {
+        if (this.owner.getTanks() instanceof AEFluidInventoryUpgradeable upgradeable) {
             upgradeable.setCapacity(this.capacity);
         }
     }

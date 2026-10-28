@@ -19,11 +19,10 @@ public final class Parts {
     }
 
     public static Optional<PartType> getById(final int itemDamage) {
-        final PartType[] values = PartType.values();
-        if (itemDamage < 0 || itemDamage >= values.length) {
+        if (itemDamage < 0 || itemDamage >= PartType.VALUES.length) {
             return Optional.empty();
         }
-        return Optional.of(values[itemDamage]);
+        return Optional.of(PartType.VALUES[itemDamage]);
     }
 
     public IItemDefinition getBeamFormer() { return this.beamFormer; }
@@ -40,6 +39,8 @@ public final class Parts {
         BEAM_FORMER("beam_former"),
         P2P_TUNNEL_INTERFACE("p2p_tunnel_interface"),
         EXPOSER("exposer");
+
+        public static final PartType[] VALUES = values();
 
         private final String id;
 

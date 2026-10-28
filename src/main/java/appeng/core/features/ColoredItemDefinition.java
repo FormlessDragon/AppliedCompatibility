@@ -43,10 +43,9 @@ public final class ColoredItemDefinition implements AEColoredItemDefinition {
 
     @Override
     public ItemStack[] allStacks(final int stackSize) {
-        final AEColor[] colors = AEColor.values();
-        final ItemStack[] stacks = new ItemStack[colors.length];
-        for (int i = 0; i < colors.length; i++) {
-            stacks[i] = stack(colors[i], stackSize);
+        final ItemStack[] stacks = new ItemStack[AEColor.VALUES.length];
+        for (int i = 0; i < AEColor.VALUES.length; i++) {
+            stacks[i] = stack(AEColor.VALUES[i], stackSize);
         }
         return stacks;
     }

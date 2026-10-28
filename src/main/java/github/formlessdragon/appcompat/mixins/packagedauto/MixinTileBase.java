@@ -11,6 +11,7 @@ import ae2.api.networking.crafting.ICraftingProvider;
 import ae2.api.util.AECableType;
 import github.formlessdragon.appcompat.bridge.packagedauto.PackagedAutoNodeListener;
 import github.formlessdragon.appcompat.bridge.packagedauto.PackagedAutoNodeOwner;
+import github.formlessdragon.appcompat.bridge.packagedauto.PackagedPatternContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -109,6 +110,9 @@ public abstract class MixinTileBase extends TileEntity implements PackagedAutoNo
 
     @Override
     public void appcompat$requestCraftingUpdate() {
+        if (this instanceof PackagedPatternContainer container) {
+            container.getTerminalPatternInventory().invalidate();
+        }
         if (appcompat$mainNode() != null && appcompat$mainNode().getNode() != null && appcompat$mainNode().isReady() && appcompat$mainNode().hasGridBooted()) {
             ICraftingProvider.requestUpdate(appcompat$mainNode());
         }

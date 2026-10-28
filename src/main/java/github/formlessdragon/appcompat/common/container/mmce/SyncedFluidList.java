@@ -7,9 +7,9 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.fluids.util.AEFluidStack;
 import appeng.fluids.util.IAEFluidTank;
 import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.network.PacketBuffer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SyncedFluidList implements PacketWritable {
@@ -23,14 +23,14 @@ public class SyncedFluidList implements PacketWritable {
     public SyncedFluidList(final ByteBuf data) {
         final PacketBuffer buffer = new PacketBuffer(data);
         final int size = buffer.readVarInt();
-        this.stacks = new ArrayList<>(size);
+        this.stacks = new ObjectArrayList<>(size);
         for (int i = 0; i < size; i++) {
             this.stacks.add(GenericStack.readBuffer(buffer));
         }
     }
 
     public static SyncedFluidList from(final IAEFluidTank tank) {
-        final List<GenericStack> list = new ArrayList<>();
+        final List<GenericStack> list = new ObjectArrayList<>();
         if (tank != null) {
             for (int i = 0; i < tank.getSlots(); i++) {
                 final IAEFluidStack fluid = tank.getFluidInSlot(i);

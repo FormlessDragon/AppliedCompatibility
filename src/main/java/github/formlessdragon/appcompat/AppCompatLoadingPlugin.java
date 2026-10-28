@@ -1,9 +1,9 @@
 package github.formlessdragon.appcompat;
 
+import it.unimi.dsi.fastutil.objects.ObjectSets;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.jetbrains.annotations.Nullable;
 import zone.rong.mixinbooter.IMixinConfigHijacker;
-import it.unimi.dsi.fastutil.objects.ObjectSets;
 
 import java.util.Map;
 import java.util.Set;

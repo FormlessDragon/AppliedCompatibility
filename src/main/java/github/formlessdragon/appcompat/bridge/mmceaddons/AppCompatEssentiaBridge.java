@@ -5,13 +5,11 @@ import ae2.api.networking.IGridNode;
 import ae2.api.networking.security.IActionHost;
 import ae2.api.networking.security.IActionSource;
 import ae2.api.networking.storage.IStorageService;
-import ae2.api.stacks.AEKey;
 import ae2.api.storage.MEStorage;
 import ae2.api.storage.StorageHelper;
 import ae2.me.helpers.ActionHostEnergySource;
 import ae2.me.helpers.IGridConnectedTile;
 import github.alecsio.mmceaddons.common.hatch.thaumcraft.ae2.essentia.RequirementEssentia;
-import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.util.EnumFacing;
 import thaumcraft.api.aspects.Aspect;
 import thaumicenergistics.common.me.key.AEEssentiaKey;
@@ -26,7 +24,7 @@ public final class AppCompatEssentiaBridge {
     public static MEStorage getStorage(final Object owner) {
         final IGridConnectedTile host = (IGridConnectedTile) owner;
         final IGridNode node = host.getGridNode(EnumFacing.UP);
-        if (node == null) {
+        if (node == null || !node.isActive()) {
             return null;
         }
         final IGrid grid = node.grid();
@@ -47,14 +45,11 @@ public final class AppCompatEssentiaBridge {
         if (storage == null) {
             return;
         }
-        for (final Object2LongMap.Entry<AEKey> entry : storage.getAvailableStacks()) {
-            if (entry.getKey() instanceof AEEssentiaKey essentiaKey) {
-                final long amount = entry.getLongValue();
-                if (amount > 0) {
-                    target.put(essentiaKey.getAspectTag(), amount);
-                }
+        storage.getAvailableStacks().forEach((key, amount) -> {
+            if (key instanceof AEEssentiaKey essentiaKey && amount > 0) {
+                target.put(essentiaKey.getAspectTag(), amount);
             }
-        }
+        });
     }
 
     public static long extract(final Object owner, final RequirementEssentia requirement) {

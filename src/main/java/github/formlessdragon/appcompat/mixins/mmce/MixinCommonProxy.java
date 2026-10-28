@@ -1,5 +1,6 @@
 package github.formlessdragon.appcompat.mixins.mmce;
 
+import github.formlessdragon.appcompat.bridge.mmce.MMCEEnums;
 import github.formlessdragon.appcompat.common.container.mmce.ContainerMEFluidInputBus;
 import github.formlessdragon.appcompat.common.container.mmce.ContainerMEFluidOutputBus;
 import github.formlessdragon.appcompat.common.container.mmce.ContainerMEItemInputBus;
@@ -15,7 +16,6 @@ import hellfirepvp.modularmachinery.common.CommonProxy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,8 +29,7 @@ public abstract class MixinCommonProxy {
     private void appcompat$getServerGuiElement(final int ID, final EntityPlayer player, final World world,
                                                final int x, final int y, final int z,
                                                final CallbackInfoReturnable<Object> cir) {
-        final CommonProxy.GuiType[] values = CommonProxy.GuiType.values();
-        final CommonProxy.GuiType type = values[MathHelper.clamp(ID, 0, values.length - 1)];
+        final CommonProxy.GuiType type = MMCEEnums.guiType(ID);
         if (type.requiredTileEntity == null) return;
 
         switch (type) {

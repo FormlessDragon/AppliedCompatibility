@@ -1,5 +1,6 @@
 package github.formlessdragon.appcompat.common.container.mmce;
 
+import github.formlessdragon.appcompat.bridge.mmce.MMCEEnums;
 import ae2.api.inventories.PlatformInventoryWrapper;
 import ae2.api.stacks.GenericStack;
 import ae2.container.AEBaseContainer;
@@ -11,11 +12,11 @@ import ae2.container.slot.RestrictedInputSlot;
 import appeng.fluids.util.AEFluidStack;
 import github.formlessdragon.appcompat.bridge.mmce.PatternProviderCacheExtensions;
 import github.kasuminova.mmce.common.tile.MEPatternProvider;
-import github.kasuminova.mmce.common.tile.MEPatternProvider.WorkModeSetting;
 import github.kasuminova.mmce.common.util.AEFluidInventoryUpgradeable;
 import github.kasuminova.mmce.common.util.InfItemFluidHandler;
 import hellfirepvp.modularmachinery.common.machine.MachineComponent;
 import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -23,7 +24,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -162,9 +162,7 @@ public class ContainerMEPatternProvider extends AEBaseContainer {
     }
 
     private void cycleWorkMode() {
-        final WorkModeSetting[] modes = WorkModeSetting.values();
-        final int next = (this.owner.getWorkMode().ordinal() + 1) % modes.length;
-        this.owner.setWorkMode(modes[next]);
+        this.owner.setWorkMode(MMCEEnums.nextWorkMode(this.owner.getWorkMode()));
     }
 
     private void returnItems() {
@@ -219,7 +217,7 @@ public class ContainerMEPatternProvider extends AEBaseContainer {
     }
 
     private List<GenericStack> snapshotStacks() {
-        final List<GenericStack> stacks = new ArrayList<>();
+        final List<GenericStack> stacks = new ObjectArrayList<>();
         appendHandlerStacks(stacks, this.owner.getInfHandler());
         for (final MachineComponent<?> component : this.owner.getCombinationComponents()) {
             final Object provider = component.getContainerProvider();
@@ -240,7 +238,7 @@ public class ContainerMEPatternProvider extends AEBaseContainer {
         private static List<GenericStack> readStacks(final ByteBuf data) {
             final PacketBuffer buffer = new PacketBuffer(data);
             final int size = buffer.readVarInt();
-            final List<GenericStack> stacks = new ArrayList<>(size);
+            final List<GenericStack> stacks = new ObjectArrayList<>(size);
             for (int i = 0; i < size; i++) {
                 stacks.add(GenericStack.readBuffer(buffer));
             }

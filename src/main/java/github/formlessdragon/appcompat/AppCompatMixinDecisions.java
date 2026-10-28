@@ -19,6 +19,7 @@ public final class AppCompatMixinDecisions {
     public static final boolean moreMekaSuitModulesLoaded = CleanroomModDiscoverer.instance().isModPresent("moremekasuitmodules");
     public static final boolean mmceLoaded = CleanroomModDiscoverer.instance().isModPresent("modularmachinery");
     public static final boolean mmceaddonsLoaded = CleanroomModDiscoverer.instance().isModPresent("modularmachineryaddons");
+    public static final boolean thaumicEnergisticsLoaded = CleanroomModDiscoverer.instance().isModPresent("thaumicenergistics");
     public static final boolean topLoaded = CleanroomModDiscoverer.instance().isModPresent("theoneprobe");
     public static final boolean mekengLoaded = CleanroomModDiscoverer.instance().isModPresent("mekeng");
     public static final boolean gtceuLoaded = CleanroomModDiscoverer.instance().isModPresent("gregtech");
@@ -59,10 +60,13 @@ public final class AppCompatMixinDecisions {
 
         return switch (group) {
             case "mmce" -> enableMMCE && mmceLoaded && shouldApplyMMCE(mixinName);
-            case "mmceaddons" -> enableMMCEAddons && mmceaddonsLoaded && mmceLoaded;
+            case "mmceaddons" ->
+                enableMMCE && enableMMCEAddons && mmceaddonsLoaded && mmceLoaded && thaumicEnergisticsLoaded;
             case "gtceu" -> enableGTCEu && gtceuLoaded;
-            case "packagedauto" -> enablePackagedAuto && packagedautoLoaded && shouldApplyPackage(mixinName);
-            case "packagingprovider" -> enablePackagingProvider && packagingproviderLoaded;
+            case "packagedauto" -> packagedautoLoaded && shouldApplyPackage(mixinName)
+                && (enablePackagedAuto || mixinName.equals("packagedauto.MixinTileBase")
+                && enablePackagingProvider && packagingproviderLoaded);
+            case "packagingprovider" -> enablePackagingProvider && packagingproviderLoaded && packagedautoLoaded;
             case "enderioae" -> enableEnderIOAppliedEnergistics && enderioaeLoaded
                 && shouldApplyEnderIOAEMixin(mixinName);
             case "pneumaticcraft" -> enablePneumaticCraft && pneumaticcraftLoaded;

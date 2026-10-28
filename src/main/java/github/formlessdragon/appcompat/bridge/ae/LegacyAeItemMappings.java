@@ -7,14 +7,14 @@ import ae2.core.definitions.AEParts;
 import ae2.core.definitions.BlockDefinition;
 import ae2.core.definitions.ColoredItemDefinition;
 import ae2.core.definitions.ItemDefinition;
+import appeng.api.definitions.IBlockDefinition;
+import appeng.api.definitions.IItemDefinition;
+import appeng.api.definitions.ITileDefinition;
 import com.google.common.collect.ImmutableMap;
 import com.gripe.megacells.definition.MEGABlocks;
 import com.gripe.megacells.definition.MEGAItems;
 import github.formlessdragon.appcompat.AppliedCompatibility;
 import github.formlessdragon.appcompat.common.item.ItemLegacyAeError;
-import appeng.api.definitions.IBlockDefinition;
-import appeng.api.definitions.IItemDefinition;
-import appeng.api.definitions.ITileDefinition;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -26,6 +26,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
+import java.util.Locale;
 import java.util.Map;
 
 public final class LegacyAeItemMappings {
@@ -435,9 +436,8 @@ public final class LegacyAeItemMappings {
 
     private static void regPaintBalls(final ImmutableMap.Builder<String, Int2ObjectMap<SupplierItemStack>> b) {
         final Int2ObjectMap<SupplierItemStack> m = new Int2ObjectOpenHashMap<>();
-        final AEColor[] colors = AEColor.values();
-        for (int i = 0; i < colors.length; i++) {
-            final AEColor color = colors[i];
+        for (int i = 0; i < AEColor.VALUES.length; i++) {
+            final AEColor color = AEColor.VALUES[i];
             if (color == AEColor.TRANSPARENT) {
                 m.put(i, ERROR);
                 m.put(i + 20, ERROR);
@@ -689,9 +689,8 @@ public final class LegacyAeItemMappings {
 
     private static void regColored(final Int2ObjectMap<SupplierItemStack> m, final int baseMeta,
                                    final ColoredItemDefinition<?> definition) {
-        final AEColor[] colors = AEColor.values();
-        for (int i = 0; i < colors.length; i++) {
-            m.put(baseMeta + i, colored(definition, colors[i]));
+        for (int i = 0; i < AEColor.VALUES.length; i++) {
+            m.put(baseMeta + i, colored(definition, AEColor.VALUES[i]));
         }
     }
 
@@ -911,7 +910,7 @@ public final class LegacyAeItemMappings {
         if (colon < 0) {
             return false;
         }
-        final String namespace = spec.substring(0, colon).toLowerCase(java.util.Locale.ROOT);
+        final String namespace = spec.substring(0, colon).toLowerCase(Locale.ROOT);
         return namespace.equals(AppliedCompatibility.LEGACY_AE_MOD_ID)
             || namespace.equals("ae2additions") || namespace.equals("extracells")
             || namespace.equals("extracpus") || namespace.equals("megacells")

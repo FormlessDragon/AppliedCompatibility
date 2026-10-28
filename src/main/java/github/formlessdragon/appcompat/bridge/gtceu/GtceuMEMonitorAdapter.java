@@ -13,7 +13,6 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.fluids.util.FluidList;
 import appeng.util.item.ItemList;
-import it.unimi.dsi.fastutil.objects.Object2LongMap;
 
 public final class GtceuMEMonitorAdapter<T extends IAEStack<T>> implements IMEMonitor<T> {
 
@@ -65,12 +64,11 @@ public final class GtceuMEMonitorAdapter<T extends IAEStack<T>> implements IMEMo
     @Override
     public IItemList<T> getStorageList() {
         final IItemList<T> list = createList();
-        for (final Object2LongMap.Entry<AEKey> entry : this.storageService.getInventory().getAvailableStacks()) {
-            final AEKey key = entry.getKey();
-            if (GtceuAeKeyBridge.matchesChannel(this.channel, key) && entry.getLongValue() > 0) {
-                list.addStorage(castOldStack(GtceuAeKeyBridge.toOldStack(key, entry.getLongValue())));
+        this.storageService.getInventory().getAvailableStacks().forEach((key, amount) -> {
+            if (GtceuAeKeyBridge.matchesChannel(this.channel, key) && amount > 0) {
+                list.addStorage(castOldStack(GtceuAeKeyBridge.toOldStack(key, amount)));
             }
-        }
+        });
         return list;
     }
 
