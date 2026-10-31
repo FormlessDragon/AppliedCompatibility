@@ -2,6 +2,7 @@ package github.formlessdragon.appcompat;
 
 import com.cleanroommc.discovery.CleanroomModDiscoverer;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraftforge.fml.common.Loader;
 
 import java.io.IOException;
 
@@ -16,21 +17,21 @@ public final class AppCompatMixinDecisions {
     private static boolean enablePneumaticCraft = true;
     private static boolean enableBuildingGadgets = true;
     private static boolean enableCrT = true;
-    public static final boolean moreMekaSuitModulesLoaded = CleanroomModDiscoverer.instance().isModPresent("moremekasuitmodules");
-    public static final boolean mmceLoaded = CleanroomModDiscoverer.instance().isModPresent("modularmachinery");
-    public static final boolean mmceaddonsLoaded = CleanroomModDiscoverer.instance().isModPresent("modularmachineryaddons");
-    public static final boolean thaumicEnergisticsLoaded = CleanroomModDiscoverer.instance().isModPresent("thaumicenergistics");
-    public static final boolean topLoaded = CleanroomModDiscoverer.instance().isModPresent("theoneprobe");
-    public static final boolean mekengLoaded = CleanroomModDiscoverer.instance().isModPresent("mekeng");
-    public static final boolean gtceuLoaded = CleanroomModDiscoverer.instance().isModPresent("gregtech");
-    public static final boolean packagedautoLoaded = CleanroomModDiscoverer.instance().isModPresent("packagedauto");
-    public static final boolean packagingproviderLoaded = CleanroomModDiscoverer.instance().isModPresent("packagingprovider");
-    public static final boolean enderioaeLoaded = CleanroomModDiscoverer.instance().isModPresent("enderioconduitsappliedenergistics");
-    public static final boolean pneumaticcraftLoaded = CleanroomModDiscoverer.instance().isModPresent("pneumaticcraft");
-    public static final boolean buildingGadgetsLoaded = CleanroomModDiscoverer.instance().isModPresent("buildinggadgets");
-    public static final boolean jeiLoaded = CleanroomModDiscoverer.instance().isModPresent("jei");
-    public static final boolean crTLoaded = CleanroomModDiscoverer.instance().isModPresent("crafttweaker");
-    public static final boolean recipehandlerLoaded = CleanroomModDiscoverer.instance().isModPresent("recipehandler");
+    public static final boolean moreMekaSuitModulesLoaded = isModLoaded("moremekasuitmodules");
+    public static final boolean mmceLoaded = isModLoaded("modularmachinery");
+    public static final boolean mmceaddonsLoaded = isModLoaded("modularmachineryaddons");
+    public static final boolean thaumicEnergisticsLoaded = isModLoaded("thaumicenergistics");
+    public static final boolean topLoaded = isModLoaded("theoneprobe");
+    public static final boolean mekengLoaded = isModLoaded("mekeng");
+    public static final boolean gtceuLoaded = isModLoaded("gregtech");
+    public static final boolean packagedautoLoaded = isModLoaded("packagedauto");
+    public static final boolean packagingproviderLoaded = isModLoaded("packagingprovider");
+    public static final boolean enderioaeLoaded = isModLoaded("enderioconduitsappliedenergistics");
+    public static final boolean pneumaticcraftLoaded = isModLoaded("pneumaticcraft");
+    public static final boolean buildingGadgetsLoaded = isModLoaded("buildinggadgets");
+    public static final boolean jeiLoaded = isModLoaded("jei");
+    public static final boolean crTLoaded = isModLoaded("crafttweaker");
+    public static final boolean recipehandlerLoaded = isModLoaded("recipehandler");
 
     private static final String CEU_CONDUIT_SWAPPER = "crazypants.enderio.conduits.item.conduitswapper.ItemConduitSwapper";
     private static final String CEU_WIRELESS_HELPER = "crazypants.enderio.conduits.item.conduitswapper.ConduitSwapperWirelessHelper";
@@ -110,6 +111,14 @@ public final class AppCompatMixinDecisions {
         } catch (final IOException e) {
             AppliedCompatibility.LOGGER.error("Failed to inspect EnderIO class {}", className, e);
             return false;
+        }
+    }
+
+    private static boolean isModLoaded(final String modid) {
+        try {
+            return CleanroomModDiscoverer.instance().isModPresent(modid);
+        } catch (Throwable e) {
+            return Loader.isModLoaded(modid);
         }
     }
 }
