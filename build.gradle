@@ -293,6 +293,10 @@ tasks.matching { it.name == 'sourcesJar' }.configureEach {
 jar {
     archiveClassifier = 'dev'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from('LICENSE', 'COPYING.GPL-3', 'THIRD_PARTY_NOTICES.md')
+    from('docs/legacy-fluid-gui-source-lock.json') {
+        into 'META-INF/provenance'
+    }
     if (configurations.contain.size() > 0) {
         into('/') {
             from configurations.contain

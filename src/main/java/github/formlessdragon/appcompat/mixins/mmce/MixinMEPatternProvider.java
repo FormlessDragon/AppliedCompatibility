@@ -65,9 +65,9 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
     private final InternalInventory appcompat$terminalPatternInventory = new SupplierInternalInventory<>(
         () -> new PlatformInventoryWrapper(getPatterns()));
     @Unique
-    private final IPatternDetails[] appcompat$details = new IPatternDetails[MEPatternProvider.PATTERNS];
+    private IPatternDetails[] appcompat$details = new IPatternDetails[MEPatternProvider.PATTERNS];
     @Unique
-    private final ItemStack[] appcompat$decodedFrom = new ItemStack[MEPatternProvider.PATTERNS];
+    private ItemStack[] appcompat$decodedFrom = new ItemStack[MEPatternProvider.PATTERNS];
     @Shadow
     public boolean handlerDirty;
     @Shadow
@@ -159,6 +159,11 @@ public abstract class MixinMEPatternProvider extends MixinMEMachineComponent imp
 
     @Unique
     private IPatternDetails appcompat$decode(final int slot, final ItemStack stack) {
+        if (slot >= this.appcompat$details.length) {
+            final int size = Math.max(slot + 1, getPatterns().getSlots());
+            this.appcompat$details = Arrays.copyOf(this.appcompat$details, size);
+            this.appcompat$decodedFrom = Arrays.copyOf(this.appcompat$decodedFrom, size);
+        }
         final ItemStack cached = this.appcompat$decodedFrom[slot];
         if (stack.isEmpty()) {
             this.appcompat$decodedFrom[slot] = ItemStack.EMPTY;

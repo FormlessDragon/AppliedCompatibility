@@ -28,7 +28,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = MEMachineComponent.class, remap = false, priority = 999)
 public abstract class MixinMEMachineComponent extends TileColorableMachineComponent
-    implements IGridConnectedTile, IInWorldGridNodeHost, IPowerChannelState {
+    implements IGridConnectedTile, IInWorldGridNodeHost, IPowerChannelState,
+    github.formlessdragon.appcompat.bridge.ae.MMCEGridNodeAccess {
 
     @Unique
     protected IManagedGridNode appcompat$mainNode;
@@ -38,6 +39,13 @@ public abstract class MixinMEMachineComponent extends TileColorableMachineCompon
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void appcompat$initNode(final CallbackInfo ci) {
+        if (this instanceof github.formlessdragon.appcompat.bridge.ae.MMCEProxyNodeHost extension) {
+            final IManagedGridNode shared = extension.appcompat$getLegacyProxyNode();
+            if (shared != null) {
+                this.appcompat$mainNode = shared;
+                return;
+            }
+        }
         final IGridConnectedTile owner = this;
         this.appcompat$mainNode = GridHelper.createManagedNode(owner, TileNodeListener.INSTANCE)
                                             .setVisualRepresentation(getVisualItemStack())
@@ -58,6 +66,18 @@ public abstract class MixinMEMachineComponent extends TileColorableMachineCompon
     @Unique
     public IManagedGridNode getMainNode() {
         return this.appcompat$mainNode;
+    }
+
+    @Override
+    @Unique
+    public void appcompat$setMainNode(final IManagedGridNode node) {
+        java.util.Objects.requireNonNull(node, "node");
+        if (this.appcompat$mainNode != node) {
+            if (this.appcompat$mainNode != null) {
+                this.appcompat$mainNode.destroy();
+            }
+            this.appcompat$mainNode = node;
+        }
     }
 
     @Override
@@ -100,9 +120,9 @@ public abstract class MixinMEMachineComponent extends TileColorableMachineCompon
 
     @Inject(method = "validate", at = @At("TAIL"))
     private void appcompat$createNode(final CallbackInfo ci) {
-        final IManagedGridNode node = this.appcompat$mainNode;
         GridHelper.onFirstTick((MEMachineComponent) (Object) this, tile -> {
-            if (node != null) {
+            final IManagedGridNode node = this.appcompat$mainNode;
+            if (node != null && !node.isReady()) {
                 node.create(tile.getWorld(), tile.getPos());
                 onMainNodeStateChanged(IGridNodeListener.State.GRID_BOOT);
             }
