@@ -21,6 +21,9 @@ import static github.formlessdragon.appcompat.AppCompatMixinDecisions.packagingp
 
 public class CommonProxy {
 
+    public void receiveLegacyFluidSlots(github.formlessdragon.appcompat.bridge.ae.LegacyFluidSlotsMessage message) {
+    }
+
     public void preInit(FMLPreInitializationEvent event) {
         if(AppCompatConfig.enableLegacyAeItemIdRemapping) {
             LegacyAeItemMappings.init();
