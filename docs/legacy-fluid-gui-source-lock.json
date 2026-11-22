@@ -1,0 +1,49 @@
+{
+  "repository": "https://github.com/AE2-UEL/Applied-Energistics-2",
+  "commit": "724ffaebe3a8ba7d2320431acf03a8c2f6345d9e",
+  "license": "LGPL-3.0-or-later",
+  "files": [
+    {
+      "path": "src/main/java/appeng/fluids/util/AEFluidInventory.java",
+      "sourceSHA256": "10e2d75886e1dec416144bc34e0a4d1d8f852e8662b2fdc7df3f588d77fb6490"
+    },
+    {
+      "path": "src/main/java/appeng/fluids/util/IAEFluidTank.java",
+      "sourceSHA256": "31fef1ba564c71316e52fd9b1c790e09b712f209cf44aea7f1ea65f4df554637"
+    },
+    {
+      "path": "src/main/java/appeng/fluids/util/IAEFluidInventory.java",
+      "sourceSHA256": "6ff51a6bad50c21caed2c76fa4bd706464fb8cd25e28b05fa8cac66e0e303e12"
+    },
+    {
+      "path": "src/main/java/appeng/client/gui/widgets/GuiCustomSlot.java",
+      "sourceSHA256": "a458823c91fb9947a5143a89128c365d3932dc07ad5716d7c8571a7ff18c7109"
+    },
+    {
+      "path": "src/main/java/appeng/client/gui/widgets/ITooltip.java",
+      "sourceSHA256": "f92f04948c942dc5ec8eb7ca69353234a2af7e57bc915fbc7ee12a211dc1c166"
+    },
+    {
+      "path": "src/main/java/appeng/container/interfaces/ISpecialSlotIngredient.java",
+      "sourceSHA256": "1c0b67fe7e191f56cbaad93ddd7980b3133f94c58a178ce24cbca7e86fc04ace"
+    },
+    {
+      "path": "src/main/java/appeng/fluids/client/gui/widgets/GuiFluidTank.java",
+      "sourceSHA256": "0ee0e0271db6249274839d0fc98bb0f4456f325c1ad85f2cf175da97c9ea8b19"
+    },
+    {
+      "path": "src/main/java/appeng/fluids/client/gui/widgets/GuiFluidSlot.java",
+      "sourceSHA256": "aec8df99aaf2b3b11f5b15623020f4ea08b651fe1db56b23901e5f4a2786ded4"
+    },
+    {
+      "path": "src/main/java/appeng/util/inv/InvOperation.java",
+      "sourceSHA256": "acbdf4bcaf0aa1899270e5001ecc61d4814f7a5f4ea34d88335012222e6e6b97"
+    },
+    {
+      "path": "src/main/java/appeng/api/networking/events/MENetworkChannelChanged.java",
+      "sourcePath": "src/api/java/appeng/api/networking/events/MENetworkChannelChanged.java",
+      "sourceSHA256": "c818f8be64d58deb93295ff91b8940bdd178d07484e36a13a80b44fa817c776f",
+      "license": "MIT"
+    }
+  ]
+}

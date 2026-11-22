@@ -24,6 +24,11 @@ public class ClientProxy extends CommonProxy {
         super.postInit(event);
     }
 
+    @Override
+    public void receiveLegacyFluidSlots(github.formlessdragon.appcompat.bridge.ae.LegacyFluidSlotsMessage message) {
+        github.formlessdragon.appcompat.client.LegacyFluidSlotsHandler.handle(message);
+    }
+
     private void initMekEngClient() {
         if (Loader.isModLoaded("mekeng") && Loader.isModLoaded("mekanism")) {
             AppCompatMekEngClientInitHooks.init();

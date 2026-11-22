@@ -22,6 +22,7 @@ public class AppliedCompatibility {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        appeng.core.sync.network.NetworkHandler.instance().initialize();
         proxy.preInit(event);
     }
 
