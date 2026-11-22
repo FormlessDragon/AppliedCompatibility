@@ -62,4 +62,7 @@ dependencies {
     modImplementation("curse.maven:sonar-core-239418:2645156")
     modImplementation("curse.maven:building-gadgets-298187:3005950")
     modImplementation("curse.maven:pneumaticcraft-repressurized-281849:2978408")
+
+    modCompileOnly("curse.maven:congrega-mystica-1341792:8455550")
+    modCompileOnly("curse.maven:aqua-acrobatics-321792:5225456")
 }

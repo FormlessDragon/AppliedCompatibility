@@ -16,6 +16,8 @@ public final class AppCompatMixinDecisions {
     private static boolean enableEnderIOAppliedEnergistics = true;
     private static boolean enablePneumaticCraft = true;
     private static boolean enableBuildingGadgets = true;
+    private static boolean enableAquaAcrobatics = true;
+    private static boolean enableCongregaMystica = true;
     private static boolean enableCrT = true;
     public static final boolean moreMekaSuitModulesLoaded = isModLoaded("moremekasuitmodules");
     public static final boolean mmceLoaded = isModLoaded("modularmachinery");
@@ -29,6 +31,8 @@ public final class AppCompatMixinDecisions {
     public static final boolean enderioaeLoaded = isModLoaded("enderioconduitsappliedenergistics");
     public static final boolean pneumaticcraftLoaded = isModLoaded("pneumaticcraft");
     public static final boolean buildingGadgetsLoaded = isModLoaded("buildinggadgets");
+    public static final boolean aquaAcrobaticsLoaded = isModLoaded("aquaacrobatics");
+    public static final boolean congregaMysticaLoaded = isModLoaded("congregamystica");
     public static final boolean jeiLoaded = isModLoaded("jei");
     public static final boolean crTLoaded = isModLoaded("crafttweaker");
     public static final boolean recipehandlerLoaded = isModLoaded("recipehandler");
@@ -48,6 +52,8 @@ public final class AppCompatMixinDecisions {
         enableEnderIOAppliedEnergistics = AppCompatConfig.enableEnderIOAppliedEnergistics;
         enablePneumaticCraft = AppCompatConfig.enablePneumaticCraft;
         enableBuildingGadgets = AppCompatConfig.enableBuildingGadgets;
+        enableAquaAcrobatics = AppCompatConfig.enableAquaAcrobatics;
+        enableCongregaMystica = AppCompatConfig.enableCongregaMystica;
         enableCrT = AppCompatConfig.enableCrT;
     }
 
@@ -72,6 +78,8 @@ public final class AppCompatMixinDecisions {
                 && shouldApplyEnderIOAEMixin(mixinName);
             case "pneumaticcraft" -> enablePneumaticCraft && pneumaticcraftLoaded;
             case "buildinggadgets" -> enableBuildingGadgets && buildingGadgetsLoaded;
+            case "aquaacrobatics" -> enableAquaAcrobatics && aquaAcrobaticsLoaded;
+            case "congregamystica" -> enableCongregaMystica && congregaMysticaLoaded;
             case "crt" -> enableCrT && crTLoaded;
             case "recipehandler" -> recipehandlerLoaded;
             case "moremekasuitmodules" -> moreMekaSuitModulesLoaded;

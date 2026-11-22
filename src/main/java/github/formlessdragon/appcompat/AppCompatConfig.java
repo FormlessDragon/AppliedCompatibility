@@ -21,6 +21,10 @@ public final class AppCompatConfig {
 
     public static boolean enableBuildingGadgets = true;
 
+    public static boolean enableAquaAcrobatics = true;
+
+    public static boolean enableCongregaMystica = true;
+
     public static boolean enableLegacyAeItemIdRemapping = true;
 
     public static boolean enableCrT = true;

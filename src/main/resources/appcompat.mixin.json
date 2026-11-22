@@ -9,7 +9,9 @@
     "minVersion": "0.5.3"
   },
   "mixins": [
+    "aquaacrobatics.MixinIntegrationManager",
     "buildinggadgets.MixinAppliedEnergistics2",
+    "congregamystica.MixinModuleManager",
     "crt.MixinBracketHandlerItem",
     "enderioae.MixinConduitSwapperWirelessHelper",
     "enderioae.MixinEnderIO",
